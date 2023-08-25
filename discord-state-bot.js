@@ -27,22 +27,18 @@ const digitalTeaCompanyApi = async () => {
     
     try {
         const message = await stateChannel.send(`🚀 ${ApiAdress.slice(8)} - Launch ping at ${time(new Date())}`);
-        console.log(message.id);
 
         setInterval(() => {
             const XHR_ApiTester = new XMLHttpRequest();
-            console.log(message.id);
     
             XHR_ApiTester.onreadystatechange = () => {
                 if(xhrStateVerifier(XHR_ApiTester)) {
-                    try {
-                        message.edit(`🟢 ${ApiAdress.slice(8)} - Last ping at ${time(new Date())}`);
-                    }
+                    try { message.edit(`🟢 ${ApiAdress.slice(8)} - Last ping at ${time(new Date())}`); }
                     catch(error) { logger(error); }
                 }
                 else {
                     try {
-                        message.edit(`🔴 ${ApiAdress.slice(8)} - Last ping at ${time(new Date())} - See <#${consoleChannel.id}> for more informations`);
+                        message.edit(`🔴 ${ApiAdress.slice(8)} - Last ping at ${time(new Date())} - @here ➡️ See <#${consoleChannel.id}> for more informations`);
                         logger(`An error occured on API ping for ${ApiAdress}\r
                         statusText {\r
                             errno: ${XHR_ApiTester.statusText.errno}\r
