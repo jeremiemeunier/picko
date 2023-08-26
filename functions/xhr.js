@@ -1,5 +1,5 @@
 const xhrStateVerifier = (xhr) => {
-    if(xhr.readyState === 4 && xhr.status === 200) { return true; }
+    if(xhr.readyState === 4 && xhr.status < 300) { return true; }
     else { return false; }
 }
 
