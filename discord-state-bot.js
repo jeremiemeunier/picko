@@ -59,7 +59,7 @@ const statyPing = async (apiData) => {
             XHR_ApiTester.open('GET', apiData.adress, false);
             XHR_ApiTester.send();
             
-        }, 9000);
+        }, 300000);
     }
     catch(error) { console.log(error); }
 }
