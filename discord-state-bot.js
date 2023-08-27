@@ -3,6 +3,7 @@ const secretSettings = JSON.parse(fs.readFileSync('config/secret.json'));
 const globalSettings = JSON.parse(fs.readFileSync('config/global.json'));
 const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const axios = require('axios');
 const { Client, EmbedBuilder, GatewayIntentBits, Partials, time } = require('discord.js');
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.GuildVoiceStates],
@@ -10,13 +11,13 @@ const client = new Client({
 });
 
 const { dateParser } = require('./functions/dateParser.js');
-const { xhrStateVerifier } = require('./functions/xhr.js');
+const { xhrStateVerifier, xhrStatusVerifier } = require('./functions/xhr.js');
 
 let consoleChannel, debug, stateChannel;
 const tag = `staty[${globalSettings.version}] `;
 
-const logger = (content) => {
-    console.log(content);
+const logger = async (content) => {
+    console.log(tag + content);
     try {
         consoleChannel.messages.fetch().then(messages => {
             let lastLog = messages.first();
@@ -33,64 +34,59 @@ const logger = (content) => {
                     try { lastLog.edit(newLogContent); }
                     catch(error) { console.log(error); }
                 }
-            
-                
             }
-            else {
-                consoleChannel.send({ content: '```' + tag + content + '```' });
-            }
+            else { consoleChannel.send({ content: '```' + tag + content + '```' }); }
         });
-    } catch(error) {
-        console.log(error);
-    }
+    } catch(error) { console.log(error); }
+}
+
+const removeMessage = async (message) => {
+    await message.delete();
 }
 
 const statyPing = async (apiData) => {
     try {
         const message = await stateChannel.send(`🚀 \`${apiData.name.slice(8)}\` - Launch ping at ${time(new Date())}`);
-        logger(`Binding ${message.id} for ${apiData.name.slice(8)}`);
-        let lastPing = 2;
+        await logger(`Binding message ${message.id} for ${apiData.name.slice(8)}...`);
+        await logger(`Message binded for ${apiData.name.slice(8)}`);
+        await logger(`Set last ping state for ${apiData.name.slice(8)}...`);
+        let lastPingState = 0;
+        await logger(`State ping set to 0 for ${apiData.name.slice(8)}`);
 
-        setInterval(() => {
-            const XHR_ApiTester = new XMLHttpRequest();
-            XHR_ApiTester.onreadystatechange = () => {
-                if(xhrStateVerifier(XHR_ApiTester)) {
-                    try {
-                        if(lastPing === 0) {
-                            message.edit(`🟠 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
-                            lastPing = 1;
-                        }
-                        else {
-                            message.edit(`🟢 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
-                            lastPing = 1;
-                        }
-                    }
-                    catch(error) { logger(error); }
+        setInterval(async () => {
+            try {
+                const request = await axios({
+                    method: 'get',
+                    url: apiData.adress
+                });
+
+                if(lastPingState > 1) {
+                    await message.edit(`🟠 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
+                    lastPingState = 1;
                 }
                 else {
-                    try {
-                        if(lastPing === 0) {
-                            message.edit(`💥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - @here ➡️ See <#${consoleChannel.id}> for more informations`);
-                            lastPing = 0;
-                        } else {
-                            message.edit(`🔴 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - @here ➡️ See <#${consoleChannel.id}> for more informations`);
-                            logger(`An error occured on API ping for ${apiData.adress} → ${XHR_ApiTester.status}\r\n${XHR_ApiTester.responseText}`);
-                            lastPing = 0;
-                        }
-                    }
-                    catch(error) { logger(error); }
+                    await message.edit(`🟢 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
+                    lastPingState = 1;
                 }
             }
-    
-            XHR_ApiTester.open('GET', apiData.adress, false);
-            XHR_ApiTester.send();
-            
+            catch(error) {
+                if(lastPingState === 2) {
+                    await message.edit(`🔥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - @here ➡️ See <#${consoleChannel.id}> for more informations`);
+                    lastPingState = 3;
+                } else if(lastPingState === 3) {
+                    await message.edit(`⚫ \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - @here ➡️ See <#${consoleChannel.id}> for more informations`);
+                } else {
+                    await message.edit(`🔴 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - @here ➡️ See <#${consoleChannel.id}> for more informations`);
+                    await logger(`An error occured on API ping for ${apiData.adress} → ${error.response.status}\r\n${error.response.statusText}`);
+                    lastPingState = 2;
+                }
+            }
         }, globalSettings.options.wait);
     }
-    catch(error) { logger(error); }
+    catch(error) { await logger(error); }
 }
 
-const booter = () => {
+const booter = async () => {
     consoleChannel = client.channels.cache.find(consoleChannel => consoleChannel.name === globalSettings.channels.console);
     debug = client.channels.cache.find(channel => channel.name === globalSettings.channels.debug);
     stateChannel = client.channels.cache.find(channel => channel.name === globalSettings.channels.state);
@@ -109,8 +105,8 @@ const booter = () => {
         logger('Hello here ! 😊');
 
         logger('Cleaning old ping messages...');
-        stateChannel.messages.fetch().then(messages => {
-            messages.map(message => message.delete());
+        await stateChannel.messages.fetch().then(messages => {
+            messages.map(message => removeMessage(message));
         });
 
         // Lancement de tout les pings
