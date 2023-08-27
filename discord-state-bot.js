@@ -23,9 +23,18 @@ const logger = (content) => {
             
             if(lastLog !== undefined) {
                 let lastLogContent = lastLog.content.slice(0, -3);
+                let newLogContent = `${lastLogContent}\r\n${tag + content + '```'}`;
+
+                if(newLogContent.length >= 2000) {
+                    try { consoleChannel.send({ content: '```' + tag + content + '```' }); }
+                    catch(error) { console.log(error); }
+                }
+                else {
+                    try { lastLog.edit(newLogContent); }
+                    catch(error) { console.log(error); }
+                }
             
-                try { lastLog.edit(`${lastLogContent}\r\n${tag + content + '```'}`); }
-                catch(error) { console.log(error); }
+                
             }
             else {
                 consoleChannel.send({ content: '```' + tag + content + '```' });
@@ -38,30 +47,47 @@ const logger = (content) => {
 
 const statyPing = async (apiData) => {
     try {
-        const message = await stateChannel.send(`🚀 ${apiData.name.slice(8)} - Launch ping at ${time(new Date())}`);
+        const message = await stateChannel.send(`🚀 \`${apiData.name.slice(8)}\` - Launch ping at ${time(new Date())}`);
+        logger(`Binding ${message.id} for ${apiData.name.slice(8)}`);
+        let lastPing = 2;
 
         setInterval(() => {
             const XHR_ApiTester = new XMLHttpRequest();
             XHR_ApiTester.onreadystatechange = () => {
                 if(xhrStateVerifier(XHR_ApiTester)) {
-                    try { message.edit(`🟢 ${apiData.name.slice(8)} - Last ping at ${time(new Date())}`); }
-                    catch(error) { console.log(error); }
+                    try {
+                        if(lastPing === 0) {
+                            message.edit(`🟠 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
+                            lastPing = 1;
+                        }
+                        else {
+                            message.edit(`🟢 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
+                            lastPing = 1;
+                        }
+                    }
+                    catch(error) { logger(error); }
                 }
                 else {
                     try {
-                        message.edit(`🔴 ${apiData.name.slice(8)} - Last ping at ${time(new Date())} - @here ➡️ See <#${consoleChannel.id}> for more informations`);
-                        console.log(`An error occured on API ping for ${apiData.adress} → ${XHR_ApiTester.status}\r\n${XHR_ApiTester.responseText}`);
+                        if(lastPing === 0) {
+                            message.edit(`💥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - @here ➡️ See <#${consoleChannel.id}> for more informations`);
+                            lastPing = 0;
+                        } else {
+                            message.edit(`🔴 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - @here ➡️ See <#${consoleChannel.id}> for more informations`);
+                            logger(`An error occured on API ping for ${apiData.adress} → ${XHR_ApiTester.status}\r\n${XHR_ApiTester.responseText}`);
+                            lastPing = 0;
+                        }
                     }
-                    catch(error) { console.log(error); }
+                    catch(error) { logger(error); }
                 }
             }
     
             XHR_ApiTester.open('GET', apiData.adress, false);
             XHR_ApiTester.send();
             
-        }, 300000);
+        }, globalSettings.options.wait);
     }
-    catch(error) { console.log(error); }
+    catch(error) { logger(error); }
 }
 
 const booter = () => {
@@ -75,23 +101,26 @@ const booter = () => {
                                 .setDescription(globalSettings.options.name)
                                 .addFields(
                                     { name: 'Date starting', value: dateParser(new Date()), inline: true },
-                                    { name: 'Debug', value: globalSettings.options.debug.toString(), inline: true },
                                     { name: 'Version', value: globalSettings.version.toString(), inline: true }
                                 )
                                 .setTimestamp()
                                 .setFooter({ text: `Version ${globalSettings.version}`, });
-	    // debug.send({ embeds: [bootEmbed] });
+	    debug.send({ embeds: [bootEmbed] });
         logger('Hello here ! 😊');
 
+        logger('Cleaning old ping messages...');
+        stateChannel.messages.fetch().then(messages => {
+            messages.map(message => message.delete());
+        });
+
         // Lancement de tout les pings
+        logger('Start pinging...');
         for(let i = 0;i < apiSettings.api.map(x => x).length;i++) {
             statyPing(apiSettings.api[i]);
         }
+        logger('I\'m pinging');
     }
-    catch(error) {
-        // consoleChannel.send({ content: '```An error occured\r\n'+ error +'```' });
-        console.log(error);
-    }
+    catch(error) { logger(error); }
 }
 
 client.on('ready', () => { booter(); });
