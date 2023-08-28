@@ -1,8 +1,7 @@
 const fs = require('fs');
-const secretSettings = JSON.parse(fs.readFileSync('config/secret.json'));
-const globalSettings = JSON.parse(fs.readFileSync('config/global.json'));
+const { BOT_TOKEN, BOT_OWNER_ID, GUILD_ID, BOT_ID } = require('./config/secret.json');
+const { version, options, channels } = require('./config/global.json');
 const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
-const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const axios = require('axios');
 const { Client, EmbedBuilder, GatewayIntentBits, Partials, time } = require('discord.js');
 const client = new Client({
@@ -11,49 +10,27 @@ const client = new Client({
 });
 
 const { dateParser } = require('./functions/dateParser.js');
-const { xhrStateVerifier, xhrStatusVerifier } = require('./functions/xhr.js');
+const { removeMessage } = require('./functions/removeMessage.js');
+const { logger } = require('./functions/logger.js');
 
-let consoleChannel, debug, stateChannel;
-const tag = `staty[${globalSettings.version}] `;
-
-const logger = async (content) => {
-    console.log(tag + content);
-    try {
-        consoleChannel.messages.fetch().then(messages => {
-            let lastLog = messages.first();
-            
-            if(lastLog !== undefined) {
-                let lastLogContent = lastLog.content.slice(0, -3);
-                let newLogContent = `${lastLogContent}\r\n${tag + content + '```'}`;
-
-                if(newLogContent.length >= 2000) {
-                    try { consoleChannel.send({ content: '```' + tag + content + '```' }); }
-                    catch(error) { console.log(error); }
-                }
-                else {
-                    try { lastLog.edit(newLogContent); }
-                    catch(error) { console.log(error); }
-                }
-            }
-            else { consoleChannel.send({ content: '```' + tag + content + '```' }); }
-        });
-    } catch(error) { console.log(error); }
-}
-
-const removeMessage = async (message) => {
-    await message.delete();
-}
+let channelConsole, channelDebug, channelState;
 
 const statyPing = async (apiData) => {
     try {
-        const message = await stateChannel.send(`🚀 \`${apiData.name.slice(8)}\` - Launch ping at ${time(new Date())}`);
-        await logger(`Binding message ${message.id} for ${apiData.name.slice(8)}...`);
-        await logger(`Message binded for ${apiData.name.slice(8)}`);
-        await logger(`Set last ping state for ${apiData.name.slice(8)}...`);
+        let message = await channelState.send(`🚀 \`${apiData.name.slice(8)}\` - Launch ping at ${time(new Date())}`);
         let lastPingState = 0;
-        await logger(`State ping set to 0 for ${apiData.name.slice(8)}`);
+        let messageIsHere;
 
         setInterval(async () => {
+            try {
+                messageIsHere = await channelState.messages.fetch(message.id);
+            }
+            catch(error) { logger(error); }
+
+            if(messageIsHere === '' || messageIsHere === undefined) {
+                message = await channelState.send(`🚀 \`${apiData.name.slice(8)}\` - Launch ping at ${time(new Date())}`);
+            }
+
             try {
                 const request = await axios({
                     method: 'get',
@@ -71,53 +48,50 @@ const statyPing = async (apiData) => {
             }
             catch(error) {
                 if(lastPingState === 2) {
-                    await message.edit(`🔥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - @here ➡️ See <#${consoleChannel.id}> for more informations`);
+                    await message.edit(`🔥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
                     lastPingState = 3;
                 } else if(lastPingState === 3) {
-                    await message.edit(`⚫ \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - @here ➡️ See <#${consoleChannel.id}> for more informations`);
+                    await message.edit(`⚫ \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
                 } else {
-                    await message.edit(`🔴 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - @here ➡️ See <#${consoleChannel.id}> for more informations`);
+                    await message.edit(`🔴 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
                     await logger(`An error occured on API ping for ${apiData.adress} → ${error.response.status}\r\n${error.response.statusText}`);
                     lastPingState = 2;
                 }
             }
-        }, globalSettings.options.wait);
+        }, options.wait);
     }
     catch(error) { await logger(error); }
 }
 
 const booter = async () => {
-    consoleChannel = client.channels.cache.find(consoleChannel => consoleChannel.name === globalSettings.channels.console);
-    debug = client.channels.cache.find(channel => channel.name === globalSettings.channels.debug);
-    stateChannel = client.channels.cache.find(channel => channel.name === globalSettings.channels.state);
+    channelConsole  = client.channels.cache.find(channel => channel.name === channels.console);
+    channelDebug    = client.channels.cache.find(channel => channel.name === channels.debug);
+    channelState    = client.channels.cache.find(channel => channel.name === channels.state);
 
 	try {
         let bootEmbed = new EmbedBuilder()
-                                .setColor(globalSettings.options.color)
-                                .setDescription(globalSettings.options.name)
+                                .setColor(options.color)
+                                .setDescription(options.name)
                                 .addFields(
                                     { name: 'Date starting', value: dateParser(new Date()), inline: true },
-                                    { name: 'Version', value: globalSettings.version.toString(), inline: true }
+                                    { name: 'Version', value: version.toString(), inline: true }
                                 )
                                 .setTimestamp()
-                                .setFooter({ text: `Version ${globalSettings.version}`, });
-	    debug.send({ embeds: [bootEmbed] });
+                                .setFooter({ text: `Version ${version}`, });
+	    channelDebug.send({ embeds: [bootEmbed] });
         logger('Hello here ! 😊');
 
-        logger('Cleaning old ping messages...');
-        await stateChannel.messages.fetch().then(messages => {
+        await channelState.messages.fetch().then(messages => {
             messages.map(message => removeMessage(message));
         });
 
         // Lancement de tout les pings
-        logger('Start pinging...');
         for(let i = 0;i < apiSettings.api.map(x => x).length;i++) {
             statyPing(apiSettings.api[i]);
         }
-        logger('I\'m pinging');
     }
     catch(error) { logger(error); }
 }
 
 client.on('ready', () => { booter(); });
-client.login(secretSettings.BOT_TOKEN);
+client.login(BOT_TOKEN);
