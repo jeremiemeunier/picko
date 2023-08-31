@@ -38,16 +38,16 @@ const statyPing = async (apiData) => {
                 });
 
                 if(lastPingState > 1) {
-                    await message.edit(`🟠 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
+                    message.edit(`🟠 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
                     lastPingState = 1;
-                    await removeMessage(downMessage);
+                    removeMessage(downMessage);
                     downMessage = await channelState.send(`<@&${options.role}> \`${apiData.name.slice(8)}\` is now up !`);
                 }
                 else {
-                    await message.edit(`🟢 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
+                    message.edit(`🟢 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
                     lastPingState = 1;
 
-                    if(downMessage !== '') { await removeMessage(downMessage); }
+                    if(downMessage !== undefined) { removeMessage(downMessage); }
                 }
             }
             catch(error) {
