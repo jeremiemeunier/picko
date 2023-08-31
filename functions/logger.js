@@ -1,11 +1,11 @@
 const { version, options, channels } = require('../config/global.json');
-const { Client, GatewayIntentBits, Partials } = require('discord.js');
 const tag = `staty[${version}] `;
-const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.GuildVoiceStates],
-    partials: [Partials.Message, Partials.Channel, Partials.Reaction],
-});
-const channelConsole  = client.channels.cache.find(channel => channel.name === channels.console);
+
+let channelConsole, client;
+
+const loggerBoot = async (client, channel) => {
+    channelConsole = channel;
+}
 
 const logger = async (content) => {
     console.log(tag + content);
@@ -31,4 +31,4 @@ const logger = async (content) => {
     } catch(error) { console.log(error); }
 }
 
-module.exports = { logger }
+module.exports = { logger, loggerBoot }

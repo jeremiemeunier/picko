@@ -11,7 +11,7 @@ const client = new Client({
 
 const { dateParser } = require('./functions/dateParser.js');
 const { removeMessage } = require('./functions/removeMessage.js');
-const { logger } = require('./functions/logger.js');
+const { logger, loggerBoot } = require('./functions/logger.js');
 
 let channelConsole, channelDebug, channelState;
 
@@ -19,7 +19,7 @@ const statyPing = async (apiData) => {
     try {
         let message = await channelState.send(`🚀 \`${apiData.name.slice(8)}\` - Launch ping at ${time(new Date())}`);
         let lastPingState = 0;
-        let messageIsHere;
+        let messageIsHere, downMessage;
 
         setInterval(async () => {
             try {
@@ -40,22 +40,30 @@ const statyPing = async (apiData) => {
                 if(lastPingState > 1) {
                     await message.edit(`🟠 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
                     lastPingState = 1;
+                    await removeMessage(downMessage);
+                    downMessage = await channelState.send(`<@&${options.role}> \`${apiData.name.slice(8)}\` is now up !`);
                 }
                 else {
                     await message.edit(`🟢 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
                     lastPingState = 1;
+
+                    if(downMessage !== '') { await removeMessage(downMessage); }
                 }
             }
             catch(error) {
                 if(lastPingState === 2) {
                     await message.edit(`🔥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
                     lastPingState = 3;
+                    downMessage.edit(`<@&${options.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 2\``);
                 } else if(lastPingState === 3) {
                     await message.edit(`⚫ \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
+                    downMessage.edit(`<@&${options.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 3\``);
                 } else {
                     await message.edit(`🔴 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
-                    await logger(`An error occured on API ping for ${apiData.adress} → ${error.response.status}\r\n${error.response.statusText}`);
+                    logger(`An error occured on API ping for ${apiData.adress} → ${error.response.status} [${error.response.statusText}]`);
                     lastPingState = 2;
+
+                    downMessage = await channelState.send(`<@&${options.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 1\``);
                 }
             }
         }, options.wait);
@@ -67,6 +75,8 @@ const booter = async () => {
     channelConsole  = client.channels.cache.find(channel => channel.name === channels.console);
     channelDebug    = client.channels.cache.find(channel => channel.name === channels.debug);
     channelState    = client.channels.cache.find(channel => channel.name === channels.state);
+
+    loggerBoot(client, channelConsole);
 
 	try {
         let bootEmbed = new EmbedBuilder()
@@ -93,5 +103,7 @@ const booter = async () => {
     catch(error) { logger(error); }
 }
 
-client.on('ready', () => { booter(); });
+client.on('ready', () => {
+    booter();
+});
 client.login(BOT_TOKEN);
