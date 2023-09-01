@@ -5,7 +5,7 @@ Staty is a discord bot that allows you to monitor the status of your APIs regula
 <div align="center">
 
 <p>
-    <img src="https://1.images.cdn.digitalteacompany.fr/digitalteacompany/github/staty.png?" alt="Pastille" />
+    <img src="https://1.images.cdn.digitalteacompany.fr/digitalteacompany/github/staty.png" alt="Pastille" />
 </p>
   <br>
   <p>
