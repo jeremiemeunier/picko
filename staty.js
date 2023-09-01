@@ -47,7 +47,10 @@ const statyPing = async (apiData) => {
                     message.edit(`🟢 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
                     lastPingState = 1;
 
-                    if(downMessage !== undefined) { removeMessage(downMessage); }
+                    if(downMessage !== undefined) {
+                        removeMessage(downMessage);
+                        downMessage = undefined;
+                    }
                 }
             }
             catch(error) {
