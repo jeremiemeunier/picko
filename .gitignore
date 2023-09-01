@@ -3,3 +3,5 @@ node_modules/
 api.json
 global.json
 secret.json
+archives
+*.zip
