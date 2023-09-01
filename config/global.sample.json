@@ -1,0 +1,14 @@
+{
+    "version": "0.3-dev",
+    "options": {
+        "wait": 300000,
+        "color": "",
+        "name": "Staty",
+        "role": ""
+    },
+    "channels": {
+        "console": "",
+        "debug": "",
+        "state": ""
+    }
+}
