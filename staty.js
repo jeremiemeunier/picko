@@ -41,7 +41,9 @@ const statyPing = async (apiData) => {
                     message.edit(`🟠 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
                     lastPingState = 1;
                     removeMessage(downMessage);
-                    downMessage = await channelState.send(`<@&${options.role}> \`${apiData.name.slice(8)}\` is now up !`);
+                    if(apiData.role !== undefined) { downMessage = await channelState.send(`<@&${apiData.role}> \`${apiData.name.slice(8)}\` is now up !`); }
+                    else { downMessage = await channelState.send(`<@&${options.role}> \`${apiData.name.slice(8)}\` is now up !`); }
+                    
                 }
                 else {
                     message.edit(`🟢 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
@@ -55,18 +57,32 @@ const statyPing = async (apiData) => {
             }
             catch(error) {
                 if(lastPingState === 2) {
+                    if(apiData.role !== undefined) {
+                        await message.edit(`🔥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${apiData.role}> ➡️ See <#${channelConsole.id}> for more informations`); }
+                    else {
+                        await message.edit(`🔥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`); }
                     await message.edit(`🔥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
                     lastPingState = 3;
                     downMessage.edit(`<@&${options.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 2\``);
                 } else if(lastPingState === 3) {
-                    await message.edit(`⚫ \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
+                    if(apiData.role !== undefined) {
+                        await message.edit(`⚫ \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${apiData.role}> ➡️ See <#${channelConsole.id}> for more informations`); }
+                    else {
+                        await message.edit(`⚫ \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`); }
                     downMessage.edit(`<@&${options.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 3\``);
                 } else {
                     await message.edit(`🔴 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
                     logger(`An error occured on API ping for ${apiData.adress} → ${error.response.status} [${error.response.statusText}]`);
                     lastPingState = 2;
 
-                    downMessage = await channelState.send(`<@&${options.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 1\``);
+                    if(apiData.role !== undefined) {
+                        await message.edit(`🔴 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${apiData.role}> ➡️ See <#${channelConsole.id}> for more informations`);
+                        downMessage = await channelState.send(`<@&${apiData.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 1\``);
+                    }
+                    else {
+                        await message.edit(`🔴 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
+                        downMessage = await channelState.send(`<@&${options.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 1\``);
+                    }
                 }
             }
         }, options.wait);
