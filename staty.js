@@ -61,7 +61,6 @@ const statyPing = async (apiData) => {
                         await message.edit(`🔥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${apiData.role}> ➡️ See <#${channelConsole.id}> for more informations`); }
                     else {
                         await message.edit(`🔥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`); }
-                    await message.edit(`🔥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
                     lastPingState = 3;
                     downMessage.edit(`<@&${options.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 2\``);
                 } else if(lastPingState === 3) {
@@ -71,7 +70,6 @@ const statyPing = async (apiData) => {
                         await message.edit(`⚫ \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`); }
                     downMessage.edit(`<@&${options.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 3\``);
                 } else {
-                    await message.edit(`🔴 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
                     logger(`An error occured on API ping for ${apiData.adress} → ${error.response.status} [${error.response.statusText}]`);
                     lastPingState = 2;
 
