@@ -42,7 +42,6 @@ const statyPing = async (apiData) => {
         const message = await threadPing.send({
             content: `<@&${apiData.role === undefined ? (options.role) : (apiData.role)}>`,
             embeds: [initThreadEmbed] });
-        const lastPing = await threadPing.send({ embeds: [pingEmbed] });
 
         setInterval(async () => {
             try {
