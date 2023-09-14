@@ -22,6 +22,8 @@ Staty is a discord bot that allows you to monitor the status of your APIs regula
 For configuration of Staty you must have these files : [data/secret.json](https://github.com/DigitalTeaCompany/staty/blob/main/config/secret.sample.json),
 [data/config.json](https://github.com/DigitalTeaCompany/staty/blob/main/config/global.sample.json), [data/api.json](https://github.com/DigitalTeaCompany/staty/blob/main/config/api.sample.json).
 
+You can pass a `role_id` to ping dedicated group on an api.
+
 #### data/secret.json
 
 To create your discord app : [Discord Developers](https://discord.com/developers/applications)<br />

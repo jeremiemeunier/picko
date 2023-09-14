@@ -1,36 +1,49 @@
 const fs = require('fs');
-const { BOT_TOKEN, BOT_OWNER_ID, GUILD_ID, BOT_ID } = require('./config/secret.json');
+const { BOT_TOKEN } = require('./config/secret.json');
 const { version, options, channels } = require('./config/global.json');
 const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
 const axios = require('axios');
-const { Client, EmbedBuilder, GatewayIntentBits, Partials, time } = require('discord.js');
+const { Client, EmbedBuilder, GatewayIntentBits, Partials, ChannelType, time } = require('discord.js');
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.GuildVoiceStates],
     partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
 const { dateParser } = require('./functions/dateParser.js');
-const { removeMessage } = require('./functions/removeMessage.js');
 const { logger, loggerBoot } = require('./functions/logger.js');
 
 let channelConsole, channelDebug, channelState;
 
 const statyPing = async (apiData) => {
     try {
-        let message = await channelState.send(`🚀 \`${apiData.name.slice(8)}\` - Launch ping at ${time(new Date())}`);
         let lastPingState = 0;
-        let messageIsHere, downMessage;
+        let apiIsDown = undefined;
+        let apiIsUp = undefined;
+
+        const pingInit = new EmbedBuilder()
+            .setColor(options.color)
+            .setTitle(`🚀 ${apiData.name.slice(8)}`)
+            .setDescription(`Staty now monitoring api`);
+        const pingEmbed = new EmbedBuilder()
+            .setColor(options.color)
+            .setDescription(time(new Date()));
+        const messagePingInit = await channelState.send({ embeds: [pingInit, pingEmbed] });
+
+        const threadPing = await messagePingInit.startThread({
+            name: `🤖 ${apiData.name.slice(8)}`,
+            autoArchiveDuration: 60,
+            reason: `Dedicated thread for pinging api ${apiData.name.slice(8)}`,
+            type: ChannelType.PrivateThread,
+        });
+        const initThreadEmbed = new EmbedBuilder()
+                                    .setColor(options.color)
+                                    .setTitle(apiData.name.slice(8))
+                                    .setDescription(`You are added to this threads to monitoring api`);
+        const message = await threadPing.send({
+            content: `<@&${apiData.role === undefined ? (options.role) : (apiData.role)}>`,
+            embeds: [initThreadEmbed] });
 
         setInterval(async () => {
-            try {
-                messageIsHere = await channelState.messages.fetch(message.id);
-            }
-            catch(error) { logger(error); }
-
-            if(messageIsHere === '' || messageIsHere === undefined) {
-                message = await channelState.send(`🚀 \`${apiData.name.slice(8)}\` - Launch ping at ${time(new Date())}`);
-            }
-
             try {
                 const request = await axios({
                     method: 'get',
@@ -38,38 +51,81 @@ const statyPing = async (apiData) => {
                 });
 
                 if(lastPingState > 1) {
-                    message.edit(`🟠 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
-                    lastPingState = 1;
-                    removeMessage(downMessage);
-                    downMessage = await channelState.send(`<@&${options.role}> \`${apiData.name.slice(8)}\` is now up !`);
-                }
-                else {
-                    message.edit(`🟢 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())}`);
+                    const pingInit = new EmbedBuilder()
+                        .setColor(options.color)
+                        .setTitle(`🟠 ${apiData.name.slice(8)}`)
+                        .setDescription(`Staty now monitoring api`);
+                    const pingEmbed = new EmbedBuilder()
+                        .setColor(options.color)
+                        .setDescription(time(new Date()));
+                    messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
                     lastPingState = 1;
 
-                    if(downMessage !== undefined) {
-                        removeMessage(downMessage);
-                        downMessage = undefined;
+                    apiIsUp = await threadPing.send({ content: `@here API is now UP !` });
+
+                    if(apiIsDown !== undefined) {
+                        apiIsDown.delete();
+                        apiIsDown = undefined;
+                    }
+                }
+                else {
+                    const pingInit = new EmbedBuilder()
+                        .setColor(options.color)
+                        .setTitle(`🟢 ${apiData.name.slice(8)}`)
+                        .setDescription(`Staty now monitoring api`);
+                    const pingEmbed = new EmbedBuilder()
+                        .setColor(options.color)
+                        .setDescription(time(new Date()));
+                    messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
+                    lastPingState = 1;
+
+                    if(apiIsUp !== undefined) {
+                        apiIsUp.delete();
+                        apiIsUp = undefined;
                     }
                 }
             }
             catch(error) {
                 if(lastPingState === 2) {
-                    await message.edit(`🔥 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
+                    const pingInit = new EmbedBuilder()
+                        .setColor(options.color)
+                        .setTitle(`🔥 ${apiData.name.slice(8)}`)
+                        .setDescription(`Staty now monitoring api`);
+                    const pingEmbed = new EmbedBuilder()
+                        .setColor(options.color)
+                        .setDescription(time(new Date()));
+                    messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
                     lastPingState = 3;
-                    downMessage.edit(`<@&${options.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 2\``);
                 } else if(lastPingState === 3) {
-                    await message.edit(`⚫ \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
-                    downMessage.edit(`<@&${options.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 3\``);
+                    const pingInit = new EmbedBuilder()
+                        .setColor(options.color)
+                        .setTitle(`⚫ ${apiData.name.slice(8)}`)
+                        .setDescription(`Staty now monitoring api`);
+                    const pingEmbed = new EmbedBuilder()
+                        .setColor(options.color)
+                        .setDescription(time(new Date()));
+                    messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
+                    lastPingState = 3;
                 } else {
-                    await message.edit(`🔴 \`${apiData.name.slice(8)}\` - Last ping at ${time(new Date())} - <@&${options.role}> ➡️ See <#${channelConsole.id}> for more informations`);
-                    logger(`An error occured on API ping for ${apiData.adress} → ${error.response.status} [${error.response.statusText}]`);
+                    const pingInit = new EmbedBuilder()
+                        .setColor(options.color)
+                        .setTitle(`🔴 ${apiData.name.slice(8)}`)
+                        .setDescription(`Staty now monitoring api`);
+                    const pingEmbed = new EmbedBuilder()
+                        .setColor(options.color)
+                        .setDescription(time(new Date()));
+                    messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
                     lastPingState = 2;
 
-                    downMessage = await channelState.send(`<@&${options.role}> \`${apiData.name.slice(8)}\` is down ! \`ping 1\``);
+                    apiIsDown = await threadPing.send({ content: `@here API is now down !` });
+                    const downConsole = new EmbedBuilder()
+                            .setColor(options.color)
+                            .setTitle(`API is down !`)
+                            .setDescription(`\`\`\`An error occured on API ping for ${apiData.adress} → ${error.response.status} [${error.response.statusText}]\`\`\``);
+                    threadPing.send({ embeds: [downConsole] });
                 }
             }
-        }, options.wait);
+        }, 60000);
     }
     catch(error) { await logger(error); }
 }
@@ -94,8 +150,13 @@ const booter = async () => {
 	    channelDebug.send({ embeds: [bootEmbed] });
         logger('Hello here ! 😊');
 
+        const allThreads = channelState.threads.cache;
+        await allThreads.map(thread => {
+            thread.delete();
+        });
+
         await channelState.messages.fetch().then(messages => {
-            messages.map(message => removeMessage(message));
+            messages.map(message => { message.delete(); });
         });
 
         // Lancement de tout les pings
