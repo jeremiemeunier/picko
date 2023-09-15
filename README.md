@@ -3,19 +3,43 @@
 Staty is a discord bot that allows you to monitor the status of your APIs regularly and automatically.
 
 <div align="center">
-
-<p>
-    <img src="https://1.images.cdn.digitalteacompany.fr/digitalteacompany/github/staty.png" alt="Pastille" />
-</p>
-  <br>
-  <p>
-    Dependencies<br>
-    <a href="https://www.npmjs.com/package/discord.js"><img alt="npm" src="https://img.shields.io/npm/v/discord.js?label=discord.js"></a>
-    <a href="https://www.npmjs.com/package/axios"><img alt="npm" src="https://img.shields.io/npm/v/axios?label=axios"></a>
-    <a href="https://www.npmjs.com/package/@discordjs/rest"><img alt="npm" src="https://img.shields.io/npm/v/@discordjs/rest?label=@discordjs/rest"></a>
-  </p>
+    <p><img src="https://1.images.cdn.digitalteacompany.fr/digitalteacompany/github/staty.png" alt="Pastille" /></p>
+    <br>
+      <p>
+            Dependencies<br>
+            <a href="https://www.npmjs.com/package/discord.js"><img alt="npm" src="https://img.shields.io/npm/v/discord.js?label=discord.js"></a>
+            <a href="https://www.npmjs.com/package/axios"><img alt="npm" src="https://img.shields.io/npm/v/axios?label=axios"></a>
+            <a href="https://www.npmjs.com/package/@discordjs/rest"><img alt="npm" src="https://img.shields.io/npm/v/@discordjs/rest?label=@discordjs/rest"></a>
+      </p>
 </div>
 <br />
+
+## Changelog
+
+### `0.1.4`
+- Modifies the announcement to use the dedicated role ID if configured<br>
+```json
+{
+    "adress": HTTP_API_ADRESS,
+    "name": API_NAME,
+    "role": ROLE_ID
+}
+```
+- Staty now uses the Discord `Embed` element to send current status and last ping to global ping channel
+- Staty creates a thread on the ping message and marks the global or dedicated role to add all affected users
+
+### `0.1.3`
+ - Staty send a message to global ping channel
+ - Staty update message on api update
+ - Staty use 6 different state for api state :
+   - 🚀 Staty launch and wait first ping for state
+   - 🟢 API is up ! Everything is good
+   - 🟠 API is re-up ! Last ping : API is down but now is up
+   - 🔴 API is down ! First ping
+   - 🔥 API is down ! Second ping
+   - ⚫ API is down ! Third and up
+  
+<hr>
 
 ## Configuration files
 
