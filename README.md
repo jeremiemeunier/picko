@@ -75,7 +75,7 @@ For all channels, you must provide the exact channel name.
 -----------
 
 ### ⚠️
-Discord have rate limit for bot on update name or description on channel and threads. Your wait time must be `>= 300000` ! Now Staty check this value since `0.1.5`.
+Discord have rate limit of two actions in 10 minutes for bots on update name or description on channel and threads. Your wait time must be `>= 300000` ms ! Now Staty check this value since his version `0.1.5`.
 
 -----------
 
