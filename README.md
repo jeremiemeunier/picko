@@ -3,14 +3,11 @@
 Staty is a discord bot that allows you to monitor the status of your APIs regularly and automatically.
 
 <div align="center">
-    <p><img src="https://1.images.cdn.digitalteacompany.fr/digitalteacompany/github/staty.png" alt="Pastille" /></p>
+    <p><img src="https://1.images.cdn.digitalteacompany.fr/digitalteacompany/github/staty_couv.png" alt="Staty" /></p>
     <br>
       <p>
-            Dependencies<br>
-            <a href="https://www.npmjs.com/package/discord.js"><img alt="npm" src="https://img.shields.io/npm/v/discord.js?label=discord.js"></a>
-            <a href="https://www.npmjs.com/package/axios"><img alt="npm" src="https://img.shields.io/npm/v/axios?label=axios"></a>
-            <a href="https://www.npmjs.com/package/@discordjs/rest"><img alt="npm" src="https://img.shields.io/npm/v/@discordjs/rest?label=@discordjs/rest"></a>
-      </p>
+            Dependencies<br />
+      <img src="https://1.images.cdn.digitalteacompany.fr/digitalteacompany/github/staty_dependencies.png" alt="Staty" /></p>
 </div>
 <br />
 
