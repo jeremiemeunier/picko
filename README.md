@@ -16,6 +16,11 @@ Staty is a discord bot that allows you to monitor the status of your APIs regula
 
 ## Changelog
 
+### `0.1.5`
+ - Staty now create only a thread with the name of API
+ - Thread name has update on API ping
+ - The delays parameter is now checked to be strictly `>=` to 5 minutes
+
 ### `0.1.4`
 - Modifies the announcement to use the dedicated role ID if configured<br>
 ```json
@@ -66,6 +71,13 @@ To create your discord app : [Discord Developers](https://discord.com/developers
 For `ROLE_ID_STATE_PING`, must be provide the role id for your server role. This role has ping when an api has down or re-up.
 
 For all channels, you must provide the exact channel name.
+
+-----------
+
+### ⚠️
+Discord have rate limit for bot on update name or description on channel and threads. Your wait time must be `>= 300000` ! Now Staty check this value since `0.1.5`.
+
+-----------
 
 ```json
 {
