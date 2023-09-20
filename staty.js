@@ -56,84 +56,99 @@ const statyPing = async (apiData) => {
                 });
 
                 if(lastPingState > 1) {
-                    pingThread.setName(`🟠 ${apiData.name}`);
-                    apiIsUp = await pingThread.send({ content: `@here API is now UP !` });
+                    try {
+                        pingThread.setName(`🟠 ${apiData.name}`);
+                        apiIsUp = await pingThread.send({ content: `@here API is now UP !` });
 
-                    const pingInit = new EmbedBuilder()
-                        .setColor(options.color)
-                        .setDescription(`🟠   ${apiData.adress}`);
-                    const pingEmbed = new EmbedBuilder()
-                        .setColor(options.color)
-                        .setDescription(time(new Date()));
-                    messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
-                    lastPingState = 1;
+                        const pingInit = new EmbedBuilder()
+                            .setColor(options.color)
+                            .setDescription(`🟠 ${apiData.adress}`);
+                        const pingEmbed = new EmbedBuilder()
+                            .setColor(options.color)
+                            .setDescription(time(new Date()));
+                        messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
+                        lastPingState = 1;
 
-                    if(apiIsDown !== undefined) {
-                        apiIsDown.delete();
-                        apiIsDown = undefined;
+                        if(apiIsDown !== undefined) {
+                            apiIsDown.delete();
+                            apiIsDown = undefined;
+                        }
                     }
+                    catch(error) { logger(error); }
                 }
                 else {
-                    if(apiIsUp !== undefined || lastPingState === 0) {
-                        pingThread.setName(`🟢 ${apiData.name}`);
+                    try {
+                        if(apiIsUp !== undefined || lastPingState === 0) {
+                            pingThread.setName(`🟢 ${apiData.name}`);
+                        }
+                        
+                        const pingInit = new EmbedBuilder()
+                            .setColor(options.color)
+                            .setDescription(`🟢 ${apiData.adress}`);
+                        const pingEmbed = new EmbedBuilder()
+                            .setColor(options.color)
+                            .setDescription(time(new Date()));
+                        messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
+                        lastPingState = 1;
+    
+                        if(apiIsUp !== undefined) {
+                            apiIsUp.delete();
+                            apiIsUp = undefined;
+                        }
                     }
-                    
-                    const pingInit = new EmbedBuilder()
-                        .setColor(options.color)
-                        .setDescription(`🟢   ${apiData.adress}`);
-                    const pingEmbed = new EmbedBuilder()
-                        .setColor(options.color)
-                        .setDescription(time(new Date()));
-                    messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
-                    lastPingState = 1;
-
-                    if(apiIsUp !== undefined) {
-                        apiIsUp.delete();
-                        apiIsUp = undefined;
-                    }
+                    catch(error) { logger(error); }
                 }
             }
             catch(error) {
                 if(lastPingState === 2) {
-                    pingThread.setName(`🔥 ${apiData.name}`);
+                    try {
+                        pingThread.setName(`🔥 ${apiData.name}`);
 
-                    const pingInit = new EmbedBuilder()
-                        .setColor(options.color)
-                        .setDescription(`🔥   ${apiData.adress}`);
-                    const pingEmbed = new EmbedBuilder()
-                        .setColor(options.color)
-                        .setDescription(time(new Date()));
-                    messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
-                    lastPingState = 3;
+                        const pingInit = new EmbedBuilder()
+                            .setColor(options.color)
+                            .setDescription(`🔥 ${apiData.adress}`);
+                        const pingEmbed = new EmbedBuilder()
+                            .setColor(options.color)
+                            .setDescription(time(new Date()));
+                        messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
+                        lastPingState = 3;
+                    }
+                    catch(error) { logger(error); }
                 } else if(lastPingState === 3) {
-                    pingThread.setName(`⚫ ${apiData.name}`);
+                    try {
+                        pingThread.setName(`⚫ ${apiData.name}`);
 
-                    const pingInit = new EmbedBuilder()
-                        .setColor(options.color)
-                        .setDescription(`⚫   ${apiData.adress}`);
-                    const pingEmbed = new EmbedBuilder()
-                        .setColor(options.color)
-                        .setDescription(time(new Date()));
-                    messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
-                    lastPingState = 3;
+                        const pingInit = new EmbedBuilder()
+                            .setColor(options.color)
+                            .setDescription(`⚫ ${apiData.adress}`);
+                        const pingEmbed = new EmbedBuilder()
+                            .setColor(options.color)
+                            .setDescription(time(new Date()));
+                        messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
+                        lastPingState = 3;
+                    }
+                    catch(error) { logger(error); }
                 } else {
-                    pingThread.setName(`🔴 ${apiData.name}`);
+                    try {
+                        pingThread.setName(`🔴 ${apiData.name}`);
 
-                    const pingInit = new EmbedBuilder()
-                        .setColor(options.color)
-                        .setDescription(`🔴   ${apiData.adress}`);
-                    const pingEmbed = new EmbedBuilder()
-                        .setColor(options.color)
-                        .setDescription(time(new Date()));
-                    messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
-                    lastPingState = 2;
+                        const pingInit = new EmbedBuilder()
+                            .setColor(options.color)
+                            .setDescription(`🔴 ${apiData.adress}`);
+                        const pingEmbed = new EmbedBuilder()
+                            .setColor(options.color)
+                            .setDescription(time(new Date()));
+                        messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
+                        lastPingState = 2;
 
-                    apiIsDown = await pingThread.send({ content: `@here API is now down !` });
-                    const downConsole = new EmbedBuilder()
-                        .setColor(options.color)
-                        .setTitle(`API is down !`)
-                        .setDescription(`Find here log for latest ping\r\n\`\`\`An error occured on API ping for ${apiData.adress} → ${error.response.status} [${error.response.statusText}]\`\`\``);
-                    pingThread.send({ embeds: [downConsole] });
+                        apiIsDown = await pingThread.send({ content: `@here API is now down !` });
+                        const downConsole = new EmbedBuilder()
+                            .setColor(options.color)
+                            .setTitle(`API is down !`)
+                            .setDescription(`Find here log for latest ping\r\n\`\`\`An error occured on API ping for ${apiData.adress} → ${error.response.status} [${error.response.statusText}]\`\`\``);
+                        pingThread.send({ embeds: [downConsole] });
+                    }
+                    catch (error) { logger(error); }
                 }
             }
         }, waitingTime);
