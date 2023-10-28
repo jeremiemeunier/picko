@@ -1,6 +1,6 @@
 const fs = require('fs');
-const { BOT_TOKEN } = require('./config/secret.json');
-const { options, channels } = require('./config/global.json');
+const { BOT_TOKEN, PORT } = require('./config/secret.json');
+const { options, channels, database } = require('./config/global.json');
 const { version } = require('./package.json');
 const { color } = options;
 const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
@@ -14,6 +14,7 @@ const client = new Client({
 const { dateParser } = require('./functions/dateParser');
 const { logger, loggerBoot } = require('./functions/logger');
 const { statyPing } = require('./functions/ping');
+const { api } = require('./functions/api');
 let channelConsole, channelDebug, channelState;
 
 const booter = async () => {
@@ -23,13 +24,20 @@ const booter = async () => {
 
     loggerBoot(client, channelConsole);
 
+    if(database) {
+        logger('Using database for statistics');
+        api();
+        logger(`Lauching API on port : ${PORT}`);
+    }
+
 	try {
         let bootEmbed = new EmbedBuilder()
             .setColor(color)
             .setDescription(options.name)
             .addFields(
                 { name: 'Date starting', value: dateParser(new Date()), inline: true },
-                { name: 'Version', value: version.toString(), inline: true }
+                { name: 'Version', value: version.toString(), inline: true },
+                { name: 'API', value: database.toString(), inline: true }
             )
             .setTimestamp()
             .setFooter({ text: `Version ${version}`, });
