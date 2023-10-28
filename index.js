@@ -29,6 +29,7 @@ const booter = async () => {
         api();
         logger(`🟢 | Lauching API on port : ${PORT}`);
     }
+    else { logger('🔴 | Dont use database for statistics'); }
 
 	try {
         let bootEmbed = new EmbedBuilder()
