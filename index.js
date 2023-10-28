@@ -13,7 +13,7 @@ const client = new Client({
 
 const { dateParser } = require('./functions/dateParser');
 const { logger, loggerBoot } = require('./functions/logger');
-const { statyPing } = require('./functions/ping');
+const { statyPing } = require('./functions/tester');
 const { api } = require('./functions/api');
 let channelConsole, channelDebug, channelState;
 
@@ -62,7 +62,7 @@ const booter = async () => {
             });
         }
     }
-    catch(error) { logger(error); }
+    catch(error) { logger(`🔴 | ${error}`); }
 }
 
 client.on('ready', () => {
