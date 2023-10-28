@@ -1,6 +1,7 @@
 const { options } = require('../config/global.json');
 const { color, wait } = options;
 const { EmbedBuilder, ChannelType, time } = require('discord.js');
+const axios = require('axios');
 
 const { logger } = require('../functions/logger');
 
