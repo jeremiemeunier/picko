@@ -1,4 +1,4 @@
-const { version, options, channels } = require('../config/global.json');
+const { version } = require('../package.json');
 const tag = `staty[${version}] `;
 
 let channelConsole, client;

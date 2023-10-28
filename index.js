@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { BOT_TOKEN } = require('./config/secret.json');
-const { version, options, channels } = require('./config/global.json');
+const { options, channels } = require('./config/global.json');
+const { version } = require('./package.json');
 const { wait, colors, name } = options;
 const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
 const axios = require('axios');
