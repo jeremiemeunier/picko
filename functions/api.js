@@ -23,13 +23,13 @@ const api = () => {
     try {
         mongoose.connect(MONGODB_URL);
     }
-    catch(error) { logger(error); }
+    catch(error) { logger(`🔴 | ${error}`); }
 
     try {
         // API
-        // const infractionRoute = require('./routes/infraction');
+        const pingRoute = require('../routes/ping');
 
-        // app.use(infractionRoute);
+        app.use(pingRoute);
 
         app.get("/", (req, res) => {
             res.status(200).json({ message: "Bienvenue sur le backend de Staty" });
@@ -45,7 +45,7 @@ const api = () => {
         });
     }
     catch(error) {
-        logger(`API Server : 🔴 | An error occured on api : ${error}`);
+        logger(`🔴 | API Server : An error occured on api : ${error}`);
     }
 }
 
