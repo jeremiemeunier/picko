@@ -23,7 +23,7 @@ const api = () => {
     try {
         mongoose.connect(MONGODB_URL);
     }
-    catch(error) { logger(`🔴 | ${error}`); }
+    catch(error) { logger(`🔴 | Database connect : ${error}`); }
 
     try {
         // API
