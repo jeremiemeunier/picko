@@ -25,9 +25,9 @@ const booter = async () => {
     loggerBoot(client, channelConsole);
 
     if(database) {
-        logger('Using database for statistics');
+        logger('🟢 | Using database for statistics');
         api();
-        logger(`Lauching API on port : ${PORT}`);
+        logger(`🟢 | Lauching API on port : ${PORT}`);
     }
 
 	try {
@@ -42,7 +42,7 @@ const booter = async () => {
             .setTimestamp()
             .setFooter({ text: `Version ${version}`, });
 	    channelDebug.send({ embeds: [bootEmbed] });
-        logger('Hello here ! 😊');
+        logger('😊 | Hello here !');
 
         const allThreads = channelState.threads.cache;
         await allThreads.map(thread => {
