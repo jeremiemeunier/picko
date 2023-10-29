@@ -41,6 +41,8 @@ const statyPing = async (apiData, channels) => {
         const messagePingInit = await pingThread.send({ embeds: [pingInit, pingEmbed] });
 
         setInterval(async () => {
+            const now = new Date();
+
             try {
                 const request = await axios({
                     method: 'get',
@@ -55,6 +57,7 @@ const statyPing = async (apiData, channels) => {
                             data: {
                                 name: apiData.name,
                                 state: true,
+                                date: now
                             },
                             headers: {
                                 statyid: BOT_ID
@@ -117,6 +120,7 @@ const statyPing = async (apiData, channels) => {
                             data: {
                                 name: apiData.name,
                                 state: false,
+                                date: now
                             },
                             headers: {
                                 statyid: BOT_ID
