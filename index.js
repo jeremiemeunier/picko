@@ -15,6 +15,8 @@ const { dateParser } = require('./functions/dateParser');
 const { logger, loggerBoot } = require('./functions/logger');
 const { statyPing } = require('./functions/tester');
 const { api } = require('./functions/api');
+const { commandRegisterInit } = require('./functions/commandsRegister');
+const { interactionCreateEventInit } = require('./events/interactionCreateEvent');
 let channelConsole, channelDebug, channelState;
 
 const booter = async () => {
@@ -23,13 +25,6 @@ const booter = async () => {
     channelState    = client.channels.cache.find(channel => channel.name === channels.state);
 
     loggerBoot(client, channelConsole);
-
-    if(database) {
-        logger('🟢 | Using database for statistics');
-        api();
-        logger(`🟢 | Lauching API on port : ${PORT}`);
-    }
-    else { logger('🔴 | Dont use database for statistics'); }
 
 	try {
         let bootEmbed = new EmbedBuilder()
@@ -44,6 +39,16 @@ const booter = async () => {
             .setFooter({ text: `Version ${version}`, });
 	    channelDebug.send({ embeds: [bootEmbed] });
         logger('😊 | Hello here !');
+
+        commandRegisterInit(client);
+        interactionCreateEventInit(client);
+
+        if(database) {
+            logger('🟢 | Using database for statistics');
+            api();
+            logger(`🟢 | Lauching API on port : ${PORT}`);
+        }
+        else { logger('🔴 | Dont use database for statistics'); }
 
         const allThreads = channelState.threads.cache;
         await allThreads.map(thread => {
