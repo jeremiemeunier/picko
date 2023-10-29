@@ -13,6 +13,8 @@ Staty is a discord bot that allows you to monitor the status of your APIs regula
 
 <hr>
 
+[Changelog here](CHANGELOG.md)
+
 ## Configuration files
 
 For configuration of Staty you must have these files : [data/secret.json](https://github.com/DigitalTeaCompany/staty/blob/main/config/secret.sample.json),
