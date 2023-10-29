@@ -3,7 +3,6 @@
     "options": {
         "wait": 300000,
         "color": "",
-        "name": "Staty",
         "role": ""
     },
     "channels": {
