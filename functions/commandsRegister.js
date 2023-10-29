@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { REST, Routes } = require('discord.js');
 const { BOT_ID, BOT_TOKEN } = require('../config/secret.json');
+const { database } = require('../config/global.json');
 const { logger } = require('../functions/logger');
 
 const commands = [];
@@ -18,7 +19,9 @@ for(const folder of commandFolders) {
         const filePath = path.join(commandsPath, file);
         const command = require(filePath);
         if('data' in command) {
-            commands.push(command.data);
+            if(database && command.data.database === true || command.data.database === false) {
+                commands.push(command.data);
+            }
         } else {
             logger(`🔴 | [WARNING] The command at ${filePath} is missing a required "data" property.`);
         }
