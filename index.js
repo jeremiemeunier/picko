@@ -4,7 +4,6 @@ const { options, channels, database } = require('./config/global.json');
 const { version } = require('./package.json');
 const { color } = options;
 const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
-const axios = require('axios');
 const { Client, EmbedBuilder, GatewayIntentBits, Partials, ChannelType, Events, time } = require('discord.js');
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.GuildVoiceStates],
