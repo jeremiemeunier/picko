@@ -10,5 +10,6 @@
         "console": "",
         "debug": "",
         "state": ""
-    }
+    },
+    "database": false
 }
