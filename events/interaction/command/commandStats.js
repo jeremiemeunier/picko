@@ -3,7 +3,7 @@ const { Events, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRo
 const axios = require('axios');
 const { logger } = require('../../../functions/logger');
 const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
-const { PORT } = require('../../../config/secret.json');
+const { PORT, BOT_ID } = require('../../../config/secret.json');
 
 const commandStatsInit = (clientItem) => {
     const client = clientItem;
@@ -38,11 +38,14 @@ const commandStatsInit = (clientItem) => {
                     const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60000 });
                     const { values } = confirmation;
                     
-                    const statsView = await statsMaker(values);
-                    await interaction.editReply({
-                        content: `Last 24 hours up time for **${values}**`,
-                        components: []
-                    });
+                    try {
+                        const statsView = await statsMaker(values);
+                        await interaction.editReply({
+                            content: `All up time for **${values}** ${statsView}`,
+                            components: []
+                        });
+                    }
+                    catch(error) { logger(`🔴 | ${error}`); }
                 } catch(error) {
                     await interaction.editReply({
                         content: 'Response not received within 1 minute, cancelling !',
@@ -57,9 +60,32 @@ const commandStatsInit = (clientItem) => {
 }
 
 const statsMaker = async (apiName) => {
-    return 'yep';
+    let returnString = "";
 
-    // Local API request for stats
+    try {
+        const allPings = await axios({
+            method: "get",
+            url: `http://localhost:${PORT}/ping`,
+            headers: {
+                statyid: BOT_ID
+            },
+            params: {
+                api_name: apiName
+            }
+        });
+
+        const { data, message } = allPings.data;
+
+        data.map((item, index) => {
+            const { state } = item;
+
+            if(state) { returnString = returnString + '■'; }
+            else { returnString = returnString + '_'; }
+        });
+
+        return "```" + returnString + "```";
+    }
+    catch(error) { logger(`🔴 | API Call : ${error}`); }
 }
 
 module.exports = { commandStatsInit }
