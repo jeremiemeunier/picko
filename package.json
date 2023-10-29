@@ -1,8 +1,9 @@
 {
     "name": "staty-bot",
     "version": "0.1.6",
-    "description": "",
+    "description": "A discord bot that allows you to monitor the status of your APIs regularly and automate.",
     "main": "index.js",
+    "license": "GPL-3.0",
     "homepage": "https://github.com/DigitalTeaCompany/staty#readme",
     "author": "jeremiemeunier",
     "bugs": {
