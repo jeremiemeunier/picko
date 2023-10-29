@@ -31,7 +31,9 @@ To create your discord app : [Discord Developers](https://discord.com/developers
     "BOT_TOKEN": YOUR_DISCORD_BOT_TOKEN_ID,
     "BOT_OWNER_ID": YOUR_DISCORD_ID,
     "GUILD_ID": YOUR_DISCORD_SERVER_ID,
-    "BOT_ID": YOUR_BOT_USER_ID
+    "BOT_ID": YOUR_BOT_USER_ID,
+    "MONGODB_URL": URL_OF_YOUR_MONGODB_SERVER,
+    "PORT": INTEGER
 }
 ```
 
@@ -51,7 +53,6 @@ Discord have rate limit of two actions in 10 minutes for bots on update name or 
 
 ```json
 {
-    "version": CURRENT_VERSION,
     "options": {
         "wait": WAITING_TIME_IN_MS,
         "color": HEXADECIMAL_CODE,
@@ -62,6 +63,7 @@ Discord have rate limit of two actions in 10 minutes for bots on update name or 
         "console": NAME_OF_CHANNEL_FOR_CONSOLE,
         "debug": NAME_OF_CHANNEL_FOR_LOGS,
         "state": NAME_OF_CHANNEL_FOR_STATE
-    }
+    },
+    "database": BOOLEAN
 }
 ```
