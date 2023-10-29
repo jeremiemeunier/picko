@@ -21,4 +21,15 @@ router.post('/ping', staty, async (req, res) => {
     catch(error) { logger(`🔴 | Route error : ${error}`); }
 });
 
+router.get('/ping', staty, async (req, res) => {
+    const { api_name } = req.query;
+
+    try {
+        const allPing = await Ping.find({ api_name: api_name }).sort({date: 'asc'})
+
+        res.status(200).json({ data: allPing, message: 'All ping find' });
+    }
+    catch(error) { logger(`🔴 | Route error : ${error}`); }
+});
+
 module.exports = router;
