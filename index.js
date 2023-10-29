@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { BOT_TOKEN, PORT } = require('./config/secret.json');
 const { options, channels, database } = require('./config/global.json');
-const { version } = require('./package.json');
+const { version, name } = require('./package.json');
 const { color } = options;
 const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
 const { Client, EmbedBuilder, GatewayIntentBits, Partials, ChannelType, Events, time } = require('discord.js');
@@ -28,7 +28,7 @@ const booter = async () => {
 	try {
         let bootEmbed = new EmbedBuilder()
             .setColor(color)
-            .setDescription(options.name)
+            .setDescription(name)
             .addFields(
                 { name: 'Date starting', value: dateParser(new Date()), inline: true },
                 { name: 'Version', value: version.toString(), inline: true },
