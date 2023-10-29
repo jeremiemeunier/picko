@@ -58,6 +58,8 @@ const commandStatsInit = (clientItem) => {
 
 const statsMaker = async (apiName) => {
     return 'yep';
+
+    // Local API request for stats
 }
 
 module.exports = { commandStatsInit }
