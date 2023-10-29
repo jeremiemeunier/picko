@@ -4,44 +4,12 @@ Staty is a discord bot that allows you to monitor the status of your APIs regula
 
 <div align="center">
     <p><img src="https://1.images.cdn.digitalteacompany.fr/digitalteacompany/github/staty_couv.png" alt="Staty" /></p>
-    <br>
-      <p>
-            Dependencies<br />
-      <img src="https://1.images.cdn.digitalteacompany.fr/digitalteacompany/github/staty_dependencies.png" alt="Staty" /></p>
 </div>
 <br />
 
-## Changelog
-
-### `0.1.5`
- - Staty now create only a thread with the name of API
- - Thread name has update on API ping
- - The delays parameter is now checked to be strictly `>=` to 5 minutes
-
-### `0.1.4`
-- Modifies the announcement to use the dedicated role ID if configured<br>
-```json
-{
-    "adress": HTTP_API_ADRESS,
-    "name": API_NAME,
-    "role": ROLE_ID
-}
-```
-- Staty now uses the Discord `Embed` element to send current status and last ping to global ping channel
-- Staty creates a thread on the ping message and marks the global or dedicated role to add all affected users
-
-### `0.1.3`
- - Staty send a message to global ping channel
- - Staty update message on api update
- - Staty use 6 different state for api state :
-   - 🚀 Staty launch and wait first ping for state
-   - 🟢 API is up ! Everything is good
-   - 🟠 API is re-up ! Last ping : API is down but now is up
-   - 🔴 API is down ! First ping
-   - 🔥 API is down ! Second ping
-   - ⚫ API is down ! Third and up
-  
 <hr>
+
+[Changelog here](CHANGELOG.md)
 
 ## Configuration files
 
@@ -59,7 +27,9 @@ To create your discord app : [Discord Developers](https://discord.com/developers
     "BOT_TOKEN": YOUR_DISCORD_BOT_TOKEN_ID,
     "BOT_OWNER_ID": YOUR_DISCORD_ID,
     "GUILD_ID": YOUR_DISCORD_SERVER_ID,
-    "BOT_ID": YOUR_BOT_USER_ID
+    "BOT_ID": YOUR_BOT_USER_ID,
+    "MONGODB_URL": URL_OF_YOUR_MONGODB_SERVER,
+    "PORT": INTEGER
 }
 ```
 
@@ -69,16 +39,16 @@ For `ROLE_ID_STATE_PING`, must be provide the role id for your server role. This
 
 For all channels, you must provide the exact channel name.
 
------------
+---
 
 ### ⚠️
+
 Discord have rate limit of two actions in 10 minutes for bots on update name or description on channel and threads. Your wait time must be `>= 300000` ms ! Now Staty check this value since his version `0.1.5`.
 
------------
+---
 
 ```json
 {
-    "version": CURRENT_VERSION,
     "options": {
         "wait": WAITING_TIME_IN_MS,
         "color": HEXADECIMAL_CODE,
@@ -89,6 +59,7 @@ Discord have rate limit of two actions in 10 minutes for bots on update name or 
         "console": NAME_OF_CHANNEL_FOR_CONSOLE,
         "debug": NAME_OF_CHANNEL_FOR_LOGS,
         "state": NAME_OF_CHANNEL_FOR_STATE
-    }
+    },
+    "database": BOOLEAN
 }
 ```
