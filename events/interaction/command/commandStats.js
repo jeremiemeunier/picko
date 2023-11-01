@@ -79,8 +79,8 @@ const statsMaker = async (apiName) => {
         data.map((item, index) => {
             const { state } = item;
 
-            if(state) { returnString = returnString + '■'; }
-            else { returnString = returnString + '_'; }
+            if(state) { returnString = returnString + '◼'; }
+            else { returnString = returnString + '◻'; }
         });
 
         return "```" + returnString + "```";
