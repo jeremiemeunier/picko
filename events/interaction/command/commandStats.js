@@ -41,7 +41,7 @@ const commandStatsInit = (clientItem) => {
                     try {
                         const statsView = await statsMaker(values);
                         await interaction.editReply({
-                            content: `All up time for **${values}** ${statsView}`,
+                            content: `Last 24 hours pings for **${values}** ${statsView}`,
                             components: []
                         });
                     }
