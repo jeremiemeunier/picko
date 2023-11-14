@@ -29,16 +29,26 @@ const statyPing = async (apiData, channels) => {
             .setColor(color)
             .setTitle(apiData.name)
             .setDescription(`You are added to this thread to monitoring api`);
+        let pingThread;
 
-        const pingThread = await state.threads.create({
-            name: `🚀 ${apiData.name}`,
-            autoArchiveDuration: 60,
-            reason: `Dedicated thread for pinging api ${apiData.name}`,
-            type: ChannelType.PrivateThread,
-        });
+        if(state.threads.cache.find(thread => thread.name.endsWith(apiData.name))) {
+            pingThread = state.threads.cache.find(thread => thread.name.endsWith(apiData.name));
+            pingThread.setName(`🚀 ${apiData.name}`);
+        }
+        else {
+            pingThread = await state.threads.create({
+                name: `🚀 ${apiData.name}`,
+                autoArchiveDuration: 60,
+                reason: `Dedicated thread for pinging api ${apiData.name}`,
+                type: ChannelType.PrivateThread,
+            });
+        }
 
-        const message = await pingThread.send({ embeds: [initThreadEmbed], content: `<@&${ apiData.role === undefined ? options.role : apiData.role }>` });
-        const messagePingInit = await pingThread.send({ embeds: [pingInit, pingEmbed] });
+        const message = await pingThread.send({
+            embeds: [initThreadEmbed],
+            content: `<@&${ apiData.role === undefined ? options.role : apiData.role }>` });
+        const messagePingInit = await pingThread.send({
+            embeds: [pingInit, pingEmbed] });
 
         setInterval(async () => {
             const now = new Date();
