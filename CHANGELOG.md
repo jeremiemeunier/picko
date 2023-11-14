@@ -1,10 +1,15 @@
 ## Incoming features
 
 - [x] Slash command for statistic when using database
-- [ ] Auto rebind on existing thread wehn staty restart
+- [x] Auto rebind on existing thread wehn staty restart
 - [ ] Slash command for enforce ping on an specific API
 
 ## Changelog
+
+### `0.1.8`
+
+- Add auto rebind on active thread for api pinging
+- Delete auto thread for removed api on configuration
 
 ### `0.1.7`
 
