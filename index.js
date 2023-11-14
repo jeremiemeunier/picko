@@ -16,12 +16,13 @@ const { statyPing } = require('./functions/tester');
 const { api } = require('./functions/api');
 const { commandRegisterInit } = require('./functions/commandsRegister');
 const { interactionCreateEventInit } = require('./events/interactionCreateEvent');
-let channelConsole, channelDebug, channelState;
 
 const booter = async () => {
-    channelConsole  = client.channels.cache.find(channel => channel.name === channels.console);
-    channelDebug    = client.channels.cache.find(channel => channel.name === channels.debug);
-    channelState    = client.channels.cache.find(channel => channel.name === channels.state);
+    const channelConsole  = client.channels.cache.find(channel => channel.name === channels.console);
+    const channelDebug    = client.channels.cache.find(channel => channel.name === channels.debug);
+    const channelState    = client.channels.cache.find(channel => channel.name === channels.state);
+
+    let pingArray = [];
 
     loggerBoot(client, channelConsole);
 
@@ -49,15 +50,6 @@ const booter = async () => {
         }
         else { logger('🔴 | Dont use database for statistics'); }
 
-        const allThreads = channelState.threads.cache;
-        await allThreads.map(thread => {
-            thread.delete();
-        });
-
-        await channelState.messages.fetch().then(messages => {
-            messages.map(message => { message.delete(); });
-        });
-
         // Lancement de tout les pings
         for(let i = 0;i < apiSettings.api.map(x => x).length;i++) {
             statyPing(apiSettings.api[i], {
@@ -65,7 +57,19 @@ const booter = async () => {
                 debug: channelDebug,
                 console: channelConsole
             });
+            pingArray.push(apiSettings.api[i].name);
         }
+
+        const allThreads = channelState.threads.cache;
+        await allThreads.map(thread => {
+            console.log(thread.name, thread.name.slice(3));
+            if(pingArray.indexOf(thread.name.slice(3)) < 0) {
+                try {
+                    thread.delete();
+                }
+                catch(error) { logger(`🔴 | ${error}`); }
+            }
+        });
     }
     catch(error) { logger(`🔴 | ${error}`); }
 }
