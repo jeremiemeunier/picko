@@ -62,11 +62,8 @@ const booter = async () => {
 
         const allThreads = channelState.threads.cache;
         await allThreads.map(thread => {
-            console.log(thread.name, thread.name.slice(3));
             if(pingArray.indexOf(thread.name.slice(3)) < 0) {
-                try {
-                    thread.delete();
-                }
+                try { thread.delete(); }
                 catch(error) { logger(`🔴 | ${error}`); }
             }
         });
