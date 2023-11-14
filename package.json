@@ -1,6 +1,10 @@
 {
     "name": "staty-bot",
+<<<<<<< Updated upstream
     "version": "0.1.7",
+=======
+    "version": "0.1.8",
+>>>>>>> Stashed changes
     "description": "A discord bot that allows you to monitor the status of your APIs regularly and automate.",
     "main": "index.js",
     "license": "GPL-3.0",
