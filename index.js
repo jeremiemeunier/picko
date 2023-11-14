@@ -71,7 +71,5 @@ const booter = async () => {
     catch(error) { logger(`🔴 | ${error}`); }
 }
 
-client.on('ready', () => {
-    booter();
-});
+client.on('ready', () => { booter(); });
 client.login(BOT_TOKEN);
