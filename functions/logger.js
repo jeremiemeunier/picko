@@ -8,7 +8,10 @@ const loggerBoot = async (client, channel) => {
 }
 
 const logger = async (content) => {
-    console.log(tag + content);
+    const now = new Date();
+    const logDate = `[${now.getDay()}/${now.getMonth()}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}.${now.getMilliseconds()}]`;
+
+    console.log(`${logDate} ${tag}${content}`);
     try {
         channelConsole.messages.fetch().then(messages => {
             let lastLog = messages.first();
@@ -28,7 +31,7 @@ const logger = async (content) => {
             }
             else { channelConsole.send({ content: '```' + tag + content + '```' }); }
         });
-    } catch(error) { console.log(error); }
+    } catch(error) { console.log(`${logDate} ${tag}${error}`); }
 }
 
 module.exports = { logger, loggerBoot }
