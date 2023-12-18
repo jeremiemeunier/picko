@@ -3,10 +3,7 @@ const mongoose = require('mongoose');
 const config = mongoose.model("Config", {
     guild_id: String,
     role: String,
-    channel: {
-      console: String,
-      state: String
-    }
+    channel: String
 });
 
 module.exports = config
