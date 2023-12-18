@@ -63,7 +63,7 @@ const statyPing = async (apiData, channels) => {
                     try {
                         await axios({
                             method: "post",
-                            url: `http://localhost:${PORT}/ping`,
+                            url: `http://localhost:3000/ping`,
                             data: {
                                 name: apiData.name,
                                 state: true,
@@ -74,7 +74,7 @@ const statyPing = async (apiData, channels) => {
                             }
                         });
                     }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                    catch(error) { logger(`🔴 [ping:database:register] ${error}`); }
                 }
 
                 if(lastPingState > 1) {
@@ -96,7 +96,7 @@ const statyPing = async (apiData, channels) => {
                             apiIsDown = undefined;
                         }
                     }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                    catch(error) { logger(`🔴 [ping:set_is_reup] ${error}`); }
                 }
                 else {
                     try {
@@ -118,7 +118,7 @@ const statyPing = async (apiData, channels) => {
                             apiIsUp = undefined;
                         }
                     }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                    catch(error) { logger(`🔴 [ping:set_is_up] ${error}`); }
                 }
             }
             catch(error) {
@@ -126,7 +126,7 @@ const statyPing = async (apiData, channels) => {
                     try {
                         await axios({
                             method: "post",
-                            url: `http://localhost:${PORT}/ping`,
+                            url: `http://localhost:3000/ping`,
                             data: {
                                 name: apiData.name,
                                 state: false,
@@ -137,7 +137,7 @@ const statyPing = async (apiData, channels) => {
                             }
                         });
                     }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                    catch(error) { logger(`🔴 [ping:database:register] ${error}`); }
                 }
 
                 if(lastPingState === 2) {
@@ -153,7 +153,7 @@ const statyPing = async (apiData, channels) => {
                         messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
                         lastPingState = 3;
                     }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                    catch(error) { logger(`🔴 [ping:set_is_down_2] ${error}`); }
                 } else if(lastPingState === 3) {
                     try {
                         pingThread.setName(`⚫ ${apiData.name}`);
@@ -167,7 +167,7 @@ const statyPing = async (apiData, channels) => {
                         messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
                         lastPingState = 3;
                     }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                    catch(error) { logger(`🔴 [ping:set_is_down_3] ${error}`); }
                 } else {
                     try {
                         pingThread.setName(`🔴 ${apiData.name}`);
@@ -188,12 +188,12 @@ const statyPing = async (apiData, channels) => {
                             .setDescription(`Find here log for latest ping\r\n\`\`\`An error occured on API ping for ${apiData.adress} → ${error.response.status} [${error.response.statusText}]\`\`\``);
                         pingThread.send({ embeds: [downConsole] });
                     }
-                    catch (error) { logger(`🔴 | ${error}`); }
+                    catch (error) { logger(`🔴 [ping:set_is_down_1] ${error}`); }
                 }
             }
         }, waitingTime);
     }
-    catch(error) { await logger(`🔴 | ${error}`); }
+    catch(error) { await logger(`🔴 [ping:global] ${error}`); }
 }
 
 module.exports = { statyPing }
