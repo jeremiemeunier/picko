@@ -7,11 +7,25 @@ const loggerBoot = async (client, channel) => {
     channelConsole = channel;
 }
 
+const composeTime = () => {
+    const now = new Date();
+
+    const day = now.getDay().length < 2 ? `0${now.getDay()}` : now.getDay();
+    const month = now.getMonth().length < 2 ? `0${now.getMonth()}` : now.getMonth();
+    const year = now.getFullYear();
+
+    const hours = now.getHours().length < 2 ? `0${now.getHours()}` : now.getHours();
+    const minutes = now.getMinutes().length < 2 ? `0${now.getMinutes()}` : now.getMinutes();
+    const seconds = now.getSeconds().length < 2 ? `0${now.getSeconds()}` : now.getSeconds();
+    const miliseconds = now.getMilliseconds().length < 3 ? `0${now.getMilliseconds()}` : now.getMilliseconds();
+
+    return `[${day}/${month}/${year} ${hours}:${minutes}:${seconds}.${miliseconds}]`;
+}
+
 const logger = async (content) => {
     const now = new Date();
-    const logDate = `[${now.getDay()}/${now.getMonth()}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}.${now.getMilliseconds()}]`;
 
-    console.log(`${logDate} ${tag}${content}`);
+    console.log(`${composeTime()} ${tag}${content}`);
     
     try {
         channelConsole.messages.fetch().then(messages => {
