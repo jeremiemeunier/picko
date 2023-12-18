@@ -11,7 +11,7 @@ const client = new Client({
 });
 
 const { dateParser } = require('./functions/dateParser');
-const { logger, loggerBoot } = require('./functions/logger');
+const { logger } = require('./functions/logger');
 const { statyPing } = require('./functions/tester');
 const { api } = require('./functions/api');
 const { commandRegisterInit } = require('./functions/commandsRegister');
@@ -23,8 +23,6 @@ const booter = async () => {
     const channelState    = client.channels.cache.find(channel => channel.name === channels.state);
 
     let pingArray = [];
-
-    loggerBoot(client, channelConsole);
 
 	try {
         let bootEmbed = new EmbedBuilder()
@@ -68,7 +66,7 @@ const booter = async () => {
             }
         });
     }
-    catch(error) { logger(`🔴 | ${error}`); }
+    catch(error) { logger(`🔴 [staty:global] ${error}`); }
 }
 
 client.on('ready', () => { booter(); });
