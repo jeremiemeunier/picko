@@ -10,19 +10,19 @@ const commands = {
       type: 1,
       options: [
         {
-          name: "apiname",
+          name: "name",
           description: "An api name",
           type: 3,
           required: true
         },
         {
-          name: "apiadresse",
+          name: "adress",
           description: "An api adress",
           type: 3,
           required: true
         },
         {
-          name: "apirole",
+          name: "role",
           description: "A role",
           type: 8,
           required: false
