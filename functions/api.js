@@ -23,7 +23,7 @@ const api = () => {
     try {
         mongoose.connect(MONGODB_URL);
     }
-    catch(error) { logger(`🔴 | Database connect : ${error}`); }
+    catch(error) { logger(`🔴 [api:database] Database connect : ${error}`); }
 
     try {
         // API
@@ -40,12 +40,12 @@ const api = () => {
             res.status(404).json({ message: "This route do not exist" });
         });
         
-        app.listen(PORT, () => {
-            logger(`🚀 | API Server : Started on port ${PORT}`);
+        app.listen(3000, () => {
+            logger(`🚀 [api:server:launch] Started on port 3000`);
         });
     }
     catch(error) {
-        logger(`🔴 | API Server : An error occured on api : ${error}`);
+        logger(`🔴 [api:server] An error occured on api : ${error}`);
     }
 }
 
