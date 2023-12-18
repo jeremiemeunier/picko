@@ -65,7 +65,7 @@ const statsMaker = async (apiName) => {
     try {
         const allPings = await axios({
             method: "get",
-            url: `http://localhost:${PORT}/ping`,
+            url: `http://localhost:3000/ping`,
             headers: {
                 statyid: BOT_ID
             },
