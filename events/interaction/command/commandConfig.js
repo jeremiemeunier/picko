@@ -3,7 +3,7 @@ const { Events, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRo
 const axios = require('axios');
 const { logger } = require('../../../functions/logger');
 const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
-const { PORT, BOT_ID } = require('../../../config/secret.json');
+const { BOT_ID } = require('../../../config/secret.json');
 
 const commandConfigInit = (clientItem) => {
     const client = clientItem;
