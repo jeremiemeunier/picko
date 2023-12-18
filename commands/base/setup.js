@@ -6,35 +6,16 @@ const commands = {
     options: [
         {
             name: "role",
-            description: "Configure a role for notifications",
-            type: 1,
-            options: [
-                {
-                    name: "statyrole",
-                    description: "A role",
-                    type: 8,
-                    required: true
-                }
-            ]
+            description: "Configure a default role for notifications",
+            type: 7,
+            required: true
         },
         {
             name: "channel",
-            description: "Configure a channel for notifications",
-            type: 1,
-            options: [
-                {
-                    name: "statychannel",
-                    description: "A channel",
-                    type: 7,
-                    required: true
-                }
-            ]
-        },
-        {
-            name: "api",
-            description: "Add an api for notifications",
-            type: 1
-        },
+            description: "Configure a default channel for all api threads",
+            type: 8,
+            required: true
+        }
     ]
 };
 
