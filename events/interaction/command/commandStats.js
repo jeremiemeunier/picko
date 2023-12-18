@@ -85,7 +85,7 @@ const statsMaker = async (apiName) => {
 
         return "```" + returnString + "```";
     }
-    catch(error) { logger(`🔴 | API Call : ${error}`); }
+    catch(error) { logger(`🔴 [api:call] API Call : ${error}`); }
 }
 
 module.exports = { commandStatsInit }
