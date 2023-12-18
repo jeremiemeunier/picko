@@ -18,7 +18,7 @@ router.post('/ping', staty, async (req, res) => {
 
         res.status(201).json({ message: 'New ping registred' });
     }
-    catch(error) { logger(`🔴 | Route error : ${error}`); }
+    catch(error) { logger(`🔴 [api:ping:post] Route error : ${error}`); }
 });
 
 router.get('/ping', staty, async (req, res) => {
@@ -29,7 +29,7 @@ router.get('/ping', staty, async (req, res) => {
 
         res.status(200).json({ data: allPing, message: 'All ping find for last 24 hours' });
     }
-    catch(error) { logger(`🔴 | Route error : ${error}`); }
+    catch(error) { logger(`🔴 [api:ping:get] Route error : ${error}`); }
 });
 
 module.exports = router;
