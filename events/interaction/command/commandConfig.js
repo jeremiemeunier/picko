@@ -12,12 +12,29 @@ const commandConfigInit = (clientItem) => {
         if (!interaction.isChatInputCommand()) return;
         const { commandName } = interaction;
 
-        if(commandName === 'config') {
+        if(commandName === 'setup') {
             try {
-                
+                const guild = interaction.guildId;
+                const channel = interaction.options.getChannel('channel').id;
+                const role = interaction.options.getRole('role').id;
+
+                const registerSetup = await axios({
+                    method: "post",
+                    url: "http://localhost:3000/setup/",
+                    headers: {
+                        statyid: BOT_ID
+                    },
+                    data: {
+                        guild: guild,
+                        channel: channel,
+                        role: role
+                    }
+                });
+
+                await interaction.reply({ content: 'Your setup is ready', ephemeral: true });
             }
             catch(error) {
-                console.log(error)
+                logger(`🔴 [setup:global] API Call : ${error}`);
             }
         }
     });
