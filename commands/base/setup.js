@@ -5,14 +5,14 @@ const commands = {
     database: false,
     options: [
         {
-            name: "role",
-            description: "Configure a default role for notifications",
+            name: "channel",
+            description: "Configure a default channel for api threads",
             type: 7,
             required: true
         },
         {
-            name: "channel",
-            description: "Configure a default channel for all api threads",
+            name: "role",
+            description: "Configure a default role for all notifications",
             type: 8,
             required: true
         }
