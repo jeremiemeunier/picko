@@ -38,17 +38,17 @@ const booter = async () => {
             .setTimestamp()
             .setFooter({ text: `Version ${version}`, });
 	    channelDebug.send({ embeds: [bootEmbed] });
-        logger('😊 | Hello here !');
+        logger('😊 [bot:start] Hello here !');
 
         commandRegisterInit(client);
         interactionCreateEventInit(client);
 
         if(database) {
-            logger('🟢 | Using database for statistics');
+            logger('🟢 [database:use] Using database for statistics');
             api();
-            logger(`🟢 | Lauching API on port : ${PORT}`);
+            logger(`🟢 [api:launch] Lauching API on port 3000`);
         }
-        else { logger('🔴 | Dont use database for statistics'); }
+        else { logger('🔴 [database:use] Dont use database for statistics'); }
 
         // Lancement de tout les pings
         for(let i = 0;i < apiSettings.api.map(x => x).length;i++) {
