@@ -12,6 +12,7 @@ const logger = async (content) => {
     const logDate = `[${now.getDay()}/${now.getMonth()}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}.${now.getMilliseconds()}]`;
 
     console.log(`${logDate} ${tag}${content}`);
+    
     try {
         channelConsole.messages.fetch().then(messages => {
             let lastLog = messages.first();
