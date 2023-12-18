@@ -3,7 +3,7 @@ const { Events, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRo
 const axios = require('axios');
 const { logger } = require('../../../functions/logger');
 const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
-const { PORT, BOT_ID } = require('../../../config/secret.json');
+const { BOT_ID } = require('../../../config/secret.json');
 
 const commandStatsInit = (clientItem) => {
     const client = clientItem;
@@ -45,16 +45,16 @@ const commandStatsInit = (clientItem) => {
                             components: []
                         });
                     }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                    catch(error) { logger(`🔴 [api:stats:list] ${error}`); }
                 } catch(error) {
                     await interaction.editReply({
                         content: 'Response not received within 1 minute, cancelling !',
                         components: []
                     });
-                    logger(`🔴 | ${error}`);
+                    logger(`🔴 [api:stats:no_response] ${error}`);
                 }
             }
-            catch(error) { logger(`🔴 | ${error}`); }
+            catch(error) { logger(`🔴 [api:stats:command] ${error}`); }
         }
     });
 }
