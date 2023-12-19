@@ -1,8 +1,6 @@
-const fs = require('fs');
 const { Events, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder } = require('discord.js');
 const axios = require('axios');
 const { logger } = require('../../../functions/logger');
-const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
 const { BOT_ID } = require('../../../config/secret.json');
 
 const commandStatsInit = (clientItem) => {
