@@ -51,7 +51,7 @@ const statyPing = async (apiData, params) => {
             embeds: [pingInit, pingEmbed] });
 
         try {
-            setInterval(async () => {
+            const pingInterval = setInterval(async () => {
                 const now = new Date();
 
                 try {
@@ -206,10 +206,9 @@ const statyPing = async (apiData, params) => {
                 }
                 catch(error) {
                     logger(`🔴 [ping:inactive_ping] ${error}`);
-                    clearInterval();
+                    clearInterval(pingInterval);
                 }
-
-            }, waitingTime, this);
+            }, waitingTime, () => { logger(`🔴 [stop:interval] api id ${apiData._id}`) });
         }
         catch(error) { await logger(`🔴 [ping:setinterval] ${error}`); }
     }
