@@ -9,7 +9,7 @@ const interactionCreateEventInit = (clientItem) => {
     client = clientItem;
 
     // Commands
-    // commandStatsInit(client);
+    commandStatsInit(client);
     commandConfigInit(client);
     commandApiInit(client);
 }
