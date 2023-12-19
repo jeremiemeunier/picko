@@ -42,7 +42,7 @@ const commandApiInit = (clientItem) => {
                     await interaction.reply({
                         content: 'Your api has added to ping list, await automatic restart for pinging',
                         ephemeral: true });
-                        newApiStarter(guild, registerSetup.data.data);
+                        newApiStarter(guild, registerSetup.data.data._id);
                 }
                 catch(error) {
                     logger(`🔴 [setup:global:api_command] API Call : ${error}`);
@@ -107,7 +107,7 @@ const commandApiInit = (clientItem) => {
                                     content: "Api removed from pinging",
                                     components: [],
                                     ephemeral: false });
-                                newApiStarter(guild, deleted.data.data);
+                                newApiStarter(guild, deleted.data.data[0]);
                             }
                             catch(error) { logger(`🔴 [commande:api:remove_request] ${error}`); }
                         } catch(error) {
