@@ -10,10 +10,10 @@ const statyStarter = async (guildId, guild) => {
       method: "get",
       url: "http://localhost:3000/setup",
       params: {
-          guild: guildId
+        guild: guildId
       },
       headers: {
-          statyid: BOT_ID
+        statyid: BOT_ID
       }
     });
 
