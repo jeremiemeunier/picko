@@ -8,7 +8,7 @@ const { logger } = require('./logger');
 
 const statyPing = async (apiData, params) => {
     let waitingTime;
-    const { state, role } = params;
+    const { state, role, guild } = params;
 
     {wait >= 300000 ?
         (waitingTime = wait) :
@@ -66,7 +66,8 @@ const statyPing = async (apiData, params) => {
                         data: {
                             name: apiData.api_name,
                             state: true,
-                            date: now
+                            date: now,
+                            guild: guild.id
                         },
                         headers: {
                             statyid: BOT_ID
