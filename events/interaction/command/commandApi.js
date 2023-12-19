@@ -1,4 +1,4 @@
-const { Events, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ModalBuilder, RoleSelectMenuBuilder } = require('discord.js');
+const { Events } = require('discord.js');
 const axios = require('axios');
 const { logger } = require('../../../functions/logger');
 const { BOT_ID } = require('../../../config/secret.json');
