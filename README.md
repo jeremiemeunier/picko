@@ -14,9 +14,7 @@ Staty is a discord bot that allows you to monitor the status of your APIs regula
 ## Configuration files
 
 For configuration of Staty you must have these files : [data/secret.json](https://github.com/DigitalTeaCompany/staty/blob/main/config/secret.sample.json),
-[data/config.json](https://github.com/DigitalTeaCompany/staty/blob/main/config/global.sample.json), [data/api.json](https://github.com/DigitalTeaCompany/staty/blob/main/config/api.sample.json).
-
-You can pass a `role_id` to ping dedicated group on an api.
+[data/config.json](https://github.com/DigitalTeaCompany/staty/blob/main/config/global.sample.json).
 
 #### data/secret.json
 
@@ -29,7 +27,6 @@ To create your discord app : [Discord Developers](https://discord.com/developers
     "GUILD_ID": YOUR_DISCORD_SERVER_ID,
     "BOT_ID": YOUR_BOT_USER_ID,
     "MONGODB_URL": URL_OF_YOUR_MONGODB_SERVER,
-    "PORT": INTEGER
 }
 ```
 
@@ -53,13 +50,6 @@ Discord have rate limit of two actions in 10 minutes for bots on update name or 
         "wait": WAITING_TIME_IN_MS,
         "color": HEXADECIMAL_CODE,
         "name": "Staty",
-        "role": ROLE_ID_STATE_PING,
-    },
-    "channels": {
-        "console": NAME_OF_CHANNEL_FOR_CONSOLE,
-        "debug": NAME_OF_CHANNEL_FOR_LOGS,
-        "state": NAME_OF_CHANNEL_FOR_STATE
-    },
-    "database": BOOLEAN
+    }
 }
 ```
