@@ -4,8 +4,7 @@ const RateLimit = require('express-rate-limit');
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const { PORT, MONGODB_URL } = require('../config/secret.json');
-
+const { MONGODB_URL } = require('../config/secret.json');
 const { logger } = require('../functions/logger');
 
 const api = () => {
@@ -23,13 +22,17 @@ const api = () => {
     try {
         mongoose.connect(MONGODB_URL);
     }
-    catch(error) { logger(`🔴 | Database connect : ${error}`); }
+    catch(error) { logger(`🔴 [api:database] Database connect : ${error}`); }
 
     try {
         // API
         const pingRoute = require('../routes/ping');
+        const configRoute = require('../routes/config');
+        const apiRoute = require('../routes/api');
 
         app.use(pingRoute);
+        app.use(configRoute);
+        app.use(apiRoute);
 
         app.get("/", (req, res) => {
             res.status(200).json({ message: "Bienvenue sur le backend de Staty" });
@@ -40,12 +43,12 @@ const api = () => {
             res.status(404).json({ message: "This route do not exist" });
         });
         
-        app.listen(PORT, () => {
-            logger(`🚀 | API Server : Started on port ${PORT}`);
+        app.listen(3000, () => {
+            logger(`🚀 [api:server:launch] Started on port 3000`);
         });
     }
     catch(error) {
-        logger(`🔴 | API Server : An error occured on api : ${error}`);
+        logger(`🔴 [api:server] An error occured on api : ${error}`);
     }
 }
 

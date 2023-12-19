@@ -1,9 +1,7 @@
-const fs = require('fs');
 const { Events, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder } = require('discord.js');
 const axios = require('axios');
 const { logger } = require('../../../functions/logger');
-const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
-const { PORT, BOT_ID } = require('../../../config/secret.json');
+const { BOT_ID } = require('../../../config/secret.json');
 
 const commandStatsInit = (clientItem) => {
     const client = clientItem;
@@ -13,17 +11,31 @@ const commandStatsInit = (clientItem) => {
         const { commandName } = interaction;
 
         if(commandName === 'stats') {
+            const guild = interaction.guildId;
+
             try {
+                const allApiRequest = await axios({
+                    method: "get",
+                    url: "http://localhost:3000/api/all",
+                    params: {
+                        guild: guild
+                    },
+                    headers: {
+                        statyid: BOT_ID
+                    }
+                });
+
+                const allApiData = allApiRequest.data.data;
                 const select = new StringSelectMenuBuilder()
                     .setCustomId('api_select')
                     .setPlaceholder('Choose an api')
                     .addOptions(
-                        apiSettings.api.map((item, index) => {
-                            const { name, adress } = item;
+                        allApiData.map((item) => {
+                            const { api_name, api_adress, _id } = item;
                             return new StringSelectMenuOptionBuilder()
-                                .setLabel(name)
-                                .setDescription(adress)
-                                .setValue(name)
+                                .setLabel(api_name)
+                                .setDescription(api_adress)
+                                .setValue(_id)
                         })
                     );
                 const row = new ActionRowBuilder().addComponents(select);
@@ -45,36 +57,36 @@ const commandStatsInit = (clientItem) => {
                             components: []
                         });
                     }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                    catch(error) { logger(`🔴 [api:stats:list] ${error}`); }
                 } catch(error) {
                     await interaction.editReply({
                         content: 'Response not received within 1 minute, cancelling !',
                         components: []
                     });
-                    logger(`🔴 | ${error}`);
+                    logger(`🔴 [api:stats:no_response] ${error}`);
                 }
             }
-            catch(error) { logger(`🔴 | ${error}`); }
+            catch(error) { logger(`🔴 [api:stats:command] ${error}`); }
         }
     });
 }
 
-const statsMaker = async (apiName) => {
+const statsMaker = async (id) => {
     let returnString = "";
 
     try {
         const allPings = await axios({
             method: "get",
-            url: `http://localhost:${PORT}/ping`,
+            url: `http://localhost:3000/ping`,
             headers: {
                 statyid: BOT_ID
             },
             params: {
-                api_name: apiName
+                id: id
             }
         });
 
-        const { data, message } = allPings.data;
+        const { data } = allPings.data;
 
         data.map((item, index) => {
             const { state } = item;
@@ -85,7 +97,7 @@ const statsMaker = async (apiName) => {
 
         return "```" + returnString + "```";
     }
-    catch(error) { logger(`🔴 | API Call : ${error}`); }
+    catch(error) { logger(`🔴 [api:call] API Call : ${error}`); }
 }
 
 module.exports = { commandStatsInit }

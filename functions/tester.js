@@ -1,14 +1,14 @@
-const { options, database } = require('../config/global.json');
-const { BOT_ID, PORT } = require('../config/secret.json');
+const { options } = require('../config/global.json');
+const { BOT_ID } = require('../config/secret.json');
 const { color, wait } = options;
 const { EmbedBuilder, ChannelType, time } = require('discord.js');
 const axios = require('axios');
 
 const { logger } = require('./logger');
 
-const statyPing = async (apiData, channels) => {
+const statyPing = async (apiData, params) => {
     let waitingTime;
-    const { state } = channels;
+    const { state, role, guild } = params;
 
     {wait >= 300000 ?
         (waitingTime = wait) :
@@ -27,26 +27,26 @@ const statyPing = async (apiData, channels) => {
             .setDescription(time(new Date()));
         const initThreadEmbed = new EmbedBuilder()
             .setColor(color)
-            .setTitle(apiData.name)
+            .setTitle(apiData.api_name)
             .setDescription(`You are added to this thread to monitoring api`);
         let pingThread;
 
-        if(state.threads.cache.find(thread => thread.name.endsWith(apiData.name))) {
-            pingThread = state.threads.cache.find(thread => thread.name.endsWith(apiData.name));
-            pingThread.setName(`🚀 ${apiData.name}`);
+        if(state.threads.cache.find(thread => thread.name.endsWith(apiData.api_name))) {
+            pingThread = state.threads.cache.find(thread => thread.name.endsWith(apiData.api_name));
+            pingThread.setName(`🚀 ${apiData.api_name}`);
         }
         else {
             pingThread = await state.threads.create({
-                name: `🚀 ${apiData.name}`,
+                name: `🚀 ${apiData.api_name}`,
                 autoArchiveDuration: 60,
-                reason: `Dedicated thread for pinging api ${apiData.name}`,
+                reason: `Dedicated thread for pinging api ${apiData.api_name}`,
                 type: ChannelType.PrivateThread,
             });
         }
 
         const message = await pingThread.send({
             embeds: [initThreadEmbed],
-            content: `<@&${ apiData.role === undefined ? options.role : apiData.role }>` });
+            content: `<@&${ apiData.role === null ? role : apiData.role }>` });
         const messagePingInit = await pingThread.send({
             embeds: [pingInit, pingEmbed] });
 
@@ -56,35 +56,35 @@ const statyPing = async (apiData, channels) => {
             try {
                 const request = await axios({
                     method: 'get',
-                    url: apiData.adress
+                    url: apiData.api_adress
                 });
 
-                if(database) {
-                    try {
-                        await axios({
-                            method: "post",
-                            url: `http://localhost:${PORT}/ping`,
-                            data: {
-                                name: apiData.name,
-                                state: true,
-                                date: now
-                            },
-                            headers: {
-                                statyid: BOT_ID
-                            }
-                        });
-                    }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                try {
+                    await axios({
+                        method: "post",
+                        url: `http://localhost:3000/ping`,
+                        data: {
+                            name: apiData.api_name,
+                            state: true,
+                            date: now,
+                            guild: guild.id,
+                            api: apiData._id,
+                        },
+                        headers: {
+                            statyid: BOT_ID
+                        }
+                    });
                 }
+                catch(error) { logger(`🔴 [ping:database:register] ${error}`); }
 
                 if(lastPingState > 1) {
                     try {
-                        pingThread.setName(`🟠 ${apiData.name}`);
+                        pingThread.setName(`🟠 ${apiData.api_name}`);
                         apiIsUp = await pingThread.send({ content: `@here API is now UP !` });
 
                         const pingInit = new EmbedBuilder()
                             .setColor(color)
-                            .setDescription(`🟠 ${apiData.adress}`);
+                            .setDescription(`🟠 ${apiData.api_adress}`);
                         const pingEmbed = new EmbedBuilder()
                             .setColor(color)
                             .setDescription(time(new Date()));
@@ -96,17 +96,17 @@ const statyPing = async (apiData, channels) => {
                             apiIsDown = undefined;
                         }
                     }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                    catch(error) { logger(`🔴 [ping:set_is_reup] ${error}`); }
                 }
                 else {
                     try {
                         if(apiIsUp !== undefined || lastPingState === 0) {
-                            pingThread.setName(`🟢 ${apiData.name}`);
+                            pingThread.setName(`🟢 ${apiData.api_name}`);
                         }
                         
                         const pingInit = new EmbedBuilder()
                             .setColor(color)
-                            .setDescription(`🟢 ${apiData.adress}`);
+                            .setDescription(`🟢 ${apiData.api_adress}`);
                         const pingEmbed = new EmbedBuilder()
                             .setColor(color)
                             .setDescription(time(new Date()));
@@ -118,63 +118,62 @@ const statyPing = async (apiData, channels) => {
                             apiIsUp = undefined;
                         }
                     }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                    catch(error) { logger(`🔴 [ping:set_is_up] ${error}`); }
                 }
             }
             catch(error) {
-                if(database) {
-                    try {
-                        await axios({
-                            method: "post",
-                            url: `http://localhost:${PORT}/ping`,
-                            data: {
-                                name: apiData.name,
-                                state: false,
-                                date: now
-                            },
-                            headers: {
-                                statyid: BOT_ID
-                            }
-                        });
-                    }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                try {
+                    await axios({
+                        method: "post",
+                        url: `http://localhost:3000/ping`,
+                        data: {
+                            name: apiData.api_name,
+                            state: false,
+                            date: now,
+                            api: apiData._id,
+                        },
+                        headers: {
+                            statyid: BOT_ID
+                        }
+                    });
                 }
+                catch(error) { logger(`🔴 [ping:database:register] ${error}`); }
 
                 if(lastPingState === 2) {
                     try {
-                        pingThread.setName(`🔥 ${apiData.name}`);
+                        pingThread.setName(`🔥 ${apiData.api_name}`);
 
                         const pingInit = new EmbedBuilder()
                             .setColor(color)
-                            .setDescription(`🔥 ${apiData.adress}`);
+                            .setDescription(`🔥 ${apiData.api_adress}`);
                         const pingEmbed = new EmbedBuilder()
                             .setColor(color)
                             .setDescription(time(new Date()));
                         messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
                         lastPingState = 3;
                     }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                    catch(error) { logger(`🔴 [ping:set_is_down_2] ${error}`); }
                 } else if(lastPingState === 3) {
                     try {
-                        pingThread.setName(`⚫ ${apiData.name}`);
+                        pingThread.setName(`⚫ ${apiData.api_name}`);
 
                         const pingInit = new EmbedBuilder()
                             .setColor(color)
-                            .setDescription(`⚫ ${apiData.adress}`);
+                            .setDescription(`⚫ ${apiData.api_adress}`);
                         const pingEmbed = new EmbedBuilder()
                             .setColor(color)
                             .setDescription(time(new Date()));
                         messagePingInit.edit({ embeds: [pingInit, pingEmbed] });
                         lastPingState = 3;
                     }
-                    catch(error) { logger(`🔴 | ${error}`); }
+                    catch(error) { logger(`🔴 [ping:set_is_down_3] ${error}`); }
                 } else {
                     try {
-                        pingThread.setName(`🔴 ${apiData.name}`);
+                        pingThread.setName(`🔴 ${apiData.api_name}`);
 
                         const pingInit = new EmbedBuilder()
                             .setColor(color)
-                            .setDescription(`🔴 ${apiData.adress}`);
+                            .setDescription(`🔴 ${apiData.api_adress}`);
                         const pingEmbed = new EmbedBuilder()
                             .setColor(color)
                             .setDescription(time(new Date()));
@@ -188,12 +187,12 @@ const statyPing = async (apiData, channels) => {
                             .setDescription(`Find here log for latest ping\r\n\`\`\`An error occured on API ping for ${apiData.adress} → ${error.response.status} [${error.response.statusText}]\`\`\``);
                         pingThread.send({ embeds: [downConsole] });
                     }
-                    catch (error) { logger(`🔴 | ${error}`); }
+                    catch (error) { logger(`🔴 [ping:set_is_down_1] ${error}`); }
                 }
             }
         }, waitingTime);
     }
-    catch(error) { await logger(`🔴 | ${error}`); }
+    catch(error) { await logger(`🔴 [ping:global] ${error}`); }
 }
 
 module.exports = { statyPing }
