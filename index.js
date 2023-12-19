@@ -1,6 +1,6 @@
 const { BOT_TOKEN, BOT_ID } = require('./config/secret.json');
 const axios = require('axios');
-const { Client, GatewayIntentBits, Partials } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, Events } = require('discord.js');
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.GuildVoiceStates],
     partials: [Partials.Message, Partials.Channel, Partials.Reaction],
@@ -10,7 +10,7 @@ const { dateParser } = require('./functions/dateParser');
 const { logger } = require('./functions/logger');
 const { statyPing } = require('./functions/tester');
 const { api } = require('./functions/api');
-const { commandRegisterInit } = require('./functions/commandsRegister');
+const { commandRegisterInit, commandRegister } = require('./functions/commandsRegister');
 const { interactionCreateEventInit } = require('./events/interactionCreateEvent');
 
 const statyStarter = async (guildId, guild) => {
@@ -90,6 +90,12 @@ const booter = () => {
 
     allGuilds.map((item, index) => {
         statyStarter(item.id, item);
+    });
+
+    client.on(Events.GuildCreate, (guild) => {
+        logsEmiter(`🚀 [staty:on_join] Join a new server : ${guild.id} ${guild.name}`);
+        commandRegister(client, guild.id);
+        statyStarter(guild.id, guild);
     });
 }
 
