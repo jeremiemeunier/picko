@@ -17,7 +17,7 @@ router.post('/api/add', staty, async (req, res) => {
     });
     await newApi.save();
 
-    res.status(200).json({ message: "New api added" });
+    res.status(200).json({ message: "New api added", data: newApi });
   }
   catch(error) {
     logger(`🔴 [api:add_api:register] ${error}`);
@@ -44,13 +44,30 @@ router.get('/api/all', staty, async (req, res) => {
   }
 });
 
+router.get('/api/id/', staty, async (req, res) => {
+  const { id } = req.query;
+  try {
+    const allApi = await Api.findById({ _id: id });
+
+    if(!allApi) {
+      res.status(404).json({ message: "No api find for this guild" });
+    }
+    else {
+      res.status(200).json({ message: "Api find", data: allApi });
+    }
+  }
+  catch(error) {
+    logger(`🔴 [api:add_api:get_all] ${error}`);
+    res.status(400);
+  }
+});
+
 router.delete('/api/remove', staty, async (req, res) => {
   const { id } = req.query;
 
   try {
-    const allApi = await Api.findByIdAndRemove({ _id: id });
-
-    res.status(200).json({ message: "Api removed" });
+    await Api.findByIdAndRemove({ _id: id });
+    res.status(200).json({ message: "Api removed", data: id });
   }
   catch(error) {
     logger(`🔴 [api:add_api:remove] ${error}`);

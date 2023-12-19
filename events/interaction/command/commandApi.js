@@ -2,7 +2,7 @@ const { Events, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRo
 const axios = require('axios');
 const { logger } = require('../../../functions/logger');
 const { BOT_ID } = require('../../../config/secret.json');
-const { statyStarter } = require('../../../functions/starter');
+const { newApiStarter } = require('../../../functions/starter');
 
 const commandApiInit = (clientItem) => {
     const client = clientItem;
@@ -42,7 +42,7 @@ const commandApiInit = (clientItem) => {
                     await interaction.reply({
                         content: 'Your api has added to ping list, await automatic restart for pinging',
                         ephemeral: true });
-                    statyStarter(guildId, guild);
+                        newApiStarter(guild, registerSetup.data.data._id);
                 }
                 catch(error) {
                     logger(`🔴 [setup:global:api_command] API Call : ${error}`);
@@ -92,7 +92,7 @@ const commandApiInit = (clientItem) => {
                             const { values } = confirmation;
                             
                             try {
-                                await axios({
+                                const deleted = await axios({
                                     method: "delete",
                                     url: "http://localhost:3000/api/remove",
                                     params: {
@@ -107,7 +107,7 @@ const commandApiInit = (clientItem) => {
                                     content: "Api removed from pinging",
                                     components: [],
                                     ephemeral: false });
-                                statyStarter(guildId, guild);
+                                newApiStarter(guild, deleted.data.data[0]);
                             }
                             catch(error) { logger(`🔴 [commande:api:remove_request] ${error}`); }
                         } catch(error) {
