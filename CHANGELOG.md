@@ -6,6 +6,14 @@
 
 ## Changelog
 
+### `0.1.9`
+
+- Add configuration by database
+- Add 2 new slash commands
+  - `/api [add|remove]` for add and remove api from the list
+  - `/setup` for setting up in your server
+- Move to a Docker system with the Dockerfile
+
 ### `0.1.8`
 
 - Add auto rebind on active thread for api pinging
