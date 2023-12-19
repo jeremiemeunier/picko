@@ -39,7 +39,7 @@ const statyStarter = async (guildId, guild) => {
 
             // List all guildId api
             try {
-                const allApi = await axios({
+                const allApiRequest = await axios({
                     method: "get",
                     url: "http://localhost:3000/api/all",
                     params: {
@@ -50,7 +50,7 @@ const statyStarter = async (guildId, guild) => {
                     }
                 });
 
-                console.log(allApi.data.data);
+                const allApiList = allApiRequest.data.data;
             }
             catch(error) {
                 logger(`🔴 [starter:get_all_api] ${error}`);
@@ -62,12 +62,15 @@ const statyStarter = async (guildId, guild) => {
     }
 }
 
-const booter = async () => {
+const booter = () => {
     const allGuilds = client.guilds.cache;
 
     logger('🟢 [database:use] Using database for statistics');
     api();
     logger(`🟢 [api:launch] Lauching API on port 3000`);
+
+    commandRegisterInit(client);
+    interactionCreateEventInit(client);
 
     allGuilds.map((item, index) => {
         statyStarter(item.id, item);
