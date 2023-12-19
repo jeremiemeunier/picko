@@ -1,14 +1,6 @@
 {
-    "version": "0.3-dev",
     "options": {
         "wait": 300000,
-        "color": "",
-        "role": ""
-    },
-    "channels": {
-        "console": "",
-        "debug": "",
-        "state": ""
-    },
-    "database": false
+        "color": ""
+    }
 }
