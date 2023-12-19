@@ -5,6 +5,7 @@ const ping = mongoose.model("Ping", {
     state: Boolean,
     date: String,
     guild: String,
+    api_id: String
 });
 
 module.exports = ping
