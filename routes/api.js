@@ -11,7 +11,7 @@ router.post('/api/add', staty, async (req, res) => {
   try {
     const newApi = new Api({
       guild_id: guild,
-      role: role || null,
+      role: role,
       api_name: name,
       api_adress: adress
     });
