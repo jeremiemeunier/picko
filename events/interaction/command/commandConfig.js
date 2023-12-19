@@ -1,8 +1,6 @@
-const fs = require('fs');
-const { Events, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ModalBuilder, RoleSelectMenuBuilder } = require('discord.js');
+const { Events } = require('discord.js');
 const axios = require('axios');
 const { logger } = require('../../../functions/logger');
-const apiSettings = JSON.parse(fs.readFileSync('config/api.json'));
 const { BOT_ID } = require('../../../config/secret.json');
 
 const commandConfigInit = (clientItem) => {
@@ -34,7 +32,7 @@ const commandConfigInit = (clientItem) => {
                 await interaction.reply({ content: 'Your setup is ready', ephemeral: true });
             }
             catch(error) {
-                logger(`🔴 [setup:global] API Call : ${error}`);
+                logger(`🔴 [setup:global:config_command] API Call : ${error}`);
             }
         }
     });
