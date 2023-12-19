@@ -52,7 +52,8 @@ const statyStarter = async (guildId, guild) => {
                 allApiList.map((item, index) => {
                     statyPing(item, {
                         state: statsChannel,
-                        role: role
+                        role: role,
+                        guild: guild
                     });
 
                     pingArray.push(item.api_name);
