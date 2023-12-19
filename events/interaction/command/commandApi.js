@@ -15,11 +15,16 @@ const commandApiInit = (clientItem) => {
                 const guild = interaction.guildId;
                 const apiName = interaction.options.getString('name');
                 const apiAdress = interaction.options.getString('adress');
-                const role = interaction.options.getRole('role').id;
+                let role = "";
+                
+                if(interaction.options.getRole('role')) {
+                    role = interaction.options.getRole('role').id;
+                }
+                else { role = null }
 
                 const registerSetup = await axios({
                     method: "post",
-                    url: "http://localhost:3000/api/add/",
+                    url: "http://localhost:3000/api/add",
                     headers: {
                         statyid: BOT_ID
                     },
