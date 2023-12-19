@@ -67,13 +67,13 @@ const statyStarter = async (guildId, guild) => {
   }
 }
 
-const newApiStarter = async (guildId, guild, apiId) => {
+const newApiStarter = async (guild, apiId) => {
   try {
     const setup = await axios({
       method: "get",
       url: "http://localhost:3000/setup",
       params: {
-        guild: guildId
+        guild: guild.id
       },
       headers: {
         statyid: BOT_ID
@@ -88,7 +88,7 @@ const newApiStarter = async (guildId, guild, apiId) => {
       try {
         const apiRequest = await axios({
           method: "get",
-          url: `http://localhost:3000/api/${apiId}`,
+          url: `http://localhost:3000/api/id/${apiId}`,
           headers: {
             statyid: BOT_ID
           }
