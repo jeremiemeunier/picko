@@ -4,8 +4,7 @@ const RateLimit = require('express-rate-limit');
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const { PORT, MONGODB_URL } = require('../config/secret.json');
-
+const { MONGODB_URL } = require('../config/secret.json');
 const { logger } = require('../functions/logger');
 
 const api = () => {
