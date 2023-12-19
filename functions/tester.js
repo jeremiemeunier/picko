@@ -67,7 +67,8 @@ const statyPing = async (apiData, params) => {
                             name: apiData.api_name,
                             state: true,
                             date: now,
-                            guild: guild.id
+                            guild: guild.id,
+                            api: apiData._id,
                         },
                         headers: {
                             statyid: BOT_ID
@@ -128,7 +129,8 @@ const statyPing = async (apiData, params) => {
                         data: {
                             name: apiData.api_name,
                             state: false,
-                            date: now
+                            date: now,
+                            api: apiData._id,
                         },
                         headers: {
                             statyid: BOT_ID
