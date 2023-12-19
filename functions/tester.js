@@ -59,23 +59,21 @@ const statyPing = async (apiData, params) => {
                     url: apiData.api_adress
                 });
 
-                if(database) {
-                    try {
-                        await axios({
-                            method: "post",
-                            url: `http://localhost:3000/ping`,
-                            data: {
-                                name: apiData.api_name,
-                                state: true,
-                                date: now
-                            },
-                            headers: {
-                                statyid: BOT_ID
-                            }
-                        });
-                    }
-                    catch(error) { logger(`🔴 [ping:database:register] ${error}`); }
+                try {
+                    await axios({
+                        method: "post",
+                        url: `http://localhost:3000/ping`,
+                        data: {
+                            name: apiData.api_name,
+                            state: true,
+                            date: now
+                        },
+                        headers: {
+                            statyid: BOT_ID
+                        }
+                    });
                 }
+                catch(error) { logger(`🔴 [ping:database:register] ${error}`); }
 
                 if(lastPingState > 1) {
                     try {
