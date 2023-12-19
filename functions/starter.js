@@ -26,7 +26,7 @@ const statyStarter = async (guildId, guild) => {
           method: "get",
           url: "http://localhost:3000/api/all",
           params: {
-              guild: guildId
+            guild: guildId
           },
           headers: {
             statyid: BOT_ID
@@ -88,37 +88,53 @@ const newApiStarter = async (guild, apiId) => {
       try {
         const apiRequest = await axios({
           method: "get",
-          url: `http://localhost:3000/api/id/${apiId}`,
+          url: `http://localhost:3000/api/id`,
           headers: {
             statyid: BOT_ID
+          },
+          params: {
+            id: apiId
           }
         });
 
         const apiList = apiRequest.data.data;
-        let pingArray = [];
-
         statyPing(apiList, {
           state: statsChannel,
           role: role,
           guild: guild
         });
-        pingArray.push(apiList.api_name);
-
-        const allThreads = statsChannel.threads.cache;
-        await allThreads.map(thread => {
-          if(pingArray.indexOf(thread.name.slice(3)) < 0) {
-            try { thread.delete(); }
-            catch(error) { logger(`🔴 | ${error}`); }
-          }
-        });
       }
       catch(error) {
-        logger(`🔴 [starter:get_all_api] ${error}`);
+        try {
+          const apiRequest = await axios({
+            method: "get",
+            url: `http://localhost:3000/api/all`,
+            headers: {
+              statyid: BOT_ID
+            },
+            params: {
+              guild: guild.id
+            }
+          });
+  
+          const apiList = apiRequest.data.data;
+          let pingArray = [];
+          pingArray.push(apiList.api_name);
+  
+          const allThreads = statsChannel.threads.cache;
+          await allThreads.map(thread => {
+            if(pingArray.indexOf(thread.name.slice(3)) < 0) {
+              try { thread.delete(); }
+              catch(error) { logger(`🔴 [new_starter:delete_thread] ${error}`); }
+            }
+          });
+        }
+        catch(error) { logger(`🔴 [new_starter:delete_old_thread] ${error}`); }
       }
     }
   }
   catch(error) {
-    logger(`🔴 [starter:get_setup] ${error}`);
+    logger(`🔴 [new_starter:get_setup] ${error}`);
   }
 }
 
