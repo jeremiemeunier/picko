@@ -11,17 +11,31 @@ const commandStatsInit = (clientItem) => {
         const { commandName } = interaction;
 
         if(commandName === 'stats') {
+            const guild = interaction.guildId;
+
             try {
+                const allApiRequest = await axios({
+                    method: "get",
+                    url: "http://localhost:3000/api/all",
+                    params: {
+                        guild: guild
+                    },
+                    headers: {
+                        statyid: BOT_ID
+                    }
+                });
+
+                const allApiData = allApiRequest.data.data;
                 const select = new StringSelectMenuBuilder()
                     .setCustomId('api_select')
                     .setPlaceholder('Choose an api')
                     .addOptions(
-                        apiSettings.api.map((item, index) => {
-                            const { name, adress } = item;
+                        allApiData.map((item) => {
+                            const { api_name, api_adress, _id } = item;
                             return new StringSelectMenuOptionBuilder()
-                                .setLabel(name)
-                                .setDescription(adress)
-                                .setValue(name)
+                                .setLabel(api_name)
+                                .setDescription(api_adress)
+                                .setValue(_id)
                         })
                     );
                 const row = new ActionRowBuilder().addComponents(select);
@@ -57,7 +71,7 @@ const commandStatsInit = (clientItem) => {
     });
 }
 
-const statsMaker = async (apiName) => {
+const statsMaker = async (id) => {
     let returnString = "";
 
     try {
@@ -68,7 +82,7 @@ const statsMaker = async (apiName) => {
                 statyid: BOT_ID
             },
             params: {
-                api_name: apiName
+                id: id
             }
         });
 
