@@ -17,7 +17,7 @@ router.post('/api/add', staty, async (req, res) => {
     });
     await newApi.save();
 
-    res.status(200).json({ message: "New api added" });
+    res.status(200).json({ message: "New api added", data: newApi });
   }
   catch(error) {
     logger(`🔴 [api:add_api:register] ${error}`);
@@ -44,7 +44,8 @@ router.get('/api/all', staty, async (req, res) => {
   }
 });
 
-router.get('/api/id/:id', staty, async (req, res) => {
+router.get('/api/id/', staty, async (req, res) => {
+  const { id } = req.query;
   try {
     const allApi = await Api.findById({ _id: id });
 
