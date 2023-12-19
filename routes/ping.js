@@ -6,14 +6,15 @@ const staty = require('../middlewares/staty');
 const { logger } = require('../functions/logger');
 
 router.post('/ping', staty, async (req, res) => {
-    const { name, state, date, guildId } = req.body;
+    const { name, state, date, guildId, api } = req.body;
 
     try {
         const newPing = new Ping({
             api_name: name,
             state: state,
             date: date,
-            guild: guildId
+            guild: guildId,
+            api_id: api
         });
         await newPing.save();
 
