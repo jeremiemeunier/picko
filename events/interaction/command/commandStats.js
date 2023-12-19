@@ -86,7 +86,7 @@ const statsMaker = async (id) => {
             }
         });
 
-        const { data, message } = allPings.data;
+        const { data } = allPings.data;
 
         data.map((item, index) => {
             const { state } = item;
