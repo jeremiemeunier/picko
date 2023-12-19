@@ -2,6 +2,7 @@ const { Events, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRo
 const axios = require('axios');
 const { logger } = require('../../../functions/logger');
 const { BOT_ID } = require('../../../config/secret.json');
+const { statyStarter } = require('../../../functions/starter');
 
 const commandApiInit = (clientItem) => {
     const client = clientItem;
@@ -13,7 +14,8 @@ const commandApiInit = (clientItem) => {
         if(commandName === 'api') {
             if(interaction.options.getSubcommand() === 'add') {
                 try {
-                    const guild = interaction.guildId;
+                    const guildId = interaction.guildId;
+                    const guild = client.guilds.cache.find(guild => guild.id === guildId);
                     const apiName = interaction.options.getString('name');
                     const apiAdress = interaction.options.getString('adress');
                     let role = "";
@@ -30,28 +32,32 @@ const commandApiInit = (clientItem) => {
                             statyid: BOT_ID
                         },
                         data: {
-                            guild: guild,
+                            guild: guildId,
                             role: role,
                             adress: apiAdress,
                             name: apiName
                         }
                     });
 
-                    await interaction.reply({ content: 'Your api has added to ping list', ephemeral: true });
+                    await interaction.reply({
+                        content: 'Your api has added to ping list, await automatic restart for pinging',
+                        ephemeral: true });
+                    statyStarter(guildId, guild);
                 }
                 catch(error) {
                     logger(`🔴 [setup:global:api_command] API Call : ${error}`);
                 }
             }
             else if(interaction.options.getSubcommand() === 'remove') {
-                const guild = interaction.guildId;
+                const guildId = interaction.guildId;
+                const guild = client.guilds.cache.find(guild => guild.id === guildId);
 
                 try {
                     const allApiRequest = await axios({
                         method: "get",
                         url: "http://localhost:3000/api/all",
                         params: {
-                            guild: guild
+                            guild: guildId
                         },
                         headers: {
                             statyid: BOT_ID
@@ -101,6 +107,7 @@ const commandApiInit = (clientItem) => {
                                     content: "Api removed from pinging",
                                     components: [],
                                     ephemeral: false });
+                                statyStarter(guildId, guild);
                             }
                             catch(error) { logger(`🔴 [commande:api:remove_request] ${error}`); }
                         } catch(error) {
