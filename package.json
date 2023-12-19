@@ -1,6 +1,6 @@
 {
     "name": "staty-bot",
-    "version": "0.1.9-beta.0.1",
+    "version": "0.1.9",
     "description": "A discord bot that allows you to monitor the status of your APIs regularly and automate.",
     "main": "index.js",
     "license": "GPL-3.0",
