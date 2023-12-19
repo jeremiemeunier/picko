@@ -25,15 +25,16 @@ const commandApiInit = (clientItem) => {
                     },
                     data: {
                         guild: guild,
-                        channel: channel,
-                        role: role
+                        role: role,
+                        adress: apiAdress,
+                        name: apiName
                     }
                 });
 
-                await interaction.reply({ content: 'Your setup is ready', ephemeral: true });
+                await interaction.reply({ content: 'Your api has added to ping list', ephemeral: true });
             }
             catch(error) {
-                logger(`🔴 [setup:global] API Call : ${error}`);
+                logger(`🔴 [setup:global:api_command] API Call : ${error}`);
             }
         }
     });
