@@ -119,7 +119,10 @@ const newApiStarter = async (guild, apiId) => {
   
           const apiList = apiRequest.data.data;
           let pingArray = [];
-          pingArray.push(apiList.api_name);
+
+          apiList.map((item) => {
+            pingArray.push(item.api_name);
+          });
   
           const allThreads = statsChannel.threads.cache;
           await allThreads.map(thread => {
