@@ -19,9 +19,7 @@ for(const folder of commandFolders) {
         const filePath = path.join(commandsPath, file);
         const command = require(filePath);
         if('data' in command) {
-            if(database && command.data.database === true || command.data.database === false) {
-                commands.push(command.data);
-            }
+            commands.push(command.data);
         } else {
             logger(`🔴 [commands:register][WARNING] The command at ${filePath} is missing a required "data" property.`);
         }
