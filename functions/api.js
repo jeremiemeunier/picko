@@ -29,9 +29,11 @@ const api = () => {
         // API
         const pingRoute = require('../routes/ping');
         const configRoute = require('../routes/config');
+        const apiRoute = require('../routes/api');
 
         app.use(pingRoute);
         app.use(configRoute);
+        app.use(apiRoute);
 
         app.get("/", (req, res) => {
             res.status(200).json({ message: "Bienvenue sur le backend de Staty" });
