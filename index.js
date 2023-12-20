@@ -27,7 +27,7 @@ const booter = () => {
     });
 
     client.on(Events.GuildCreate, (guild) => {
-        logsEmiter(`🚀 [staty:on_join] Join a new server : ${guild.id} ${guild.name}`);
+        logger(`🚀 [staty:on_join] Join a new server : ${guild.id} ${guild.name}`);
         commandRegister(client, guild.id);
         statyStarter(guild.id, guild);
     });
