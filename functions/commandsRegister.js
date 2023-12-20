@@ -25,7 +25,9 @@ for(const folder of commandFolders) {
     }
 }
 
-const commandRegister = async (GUILD_ID) => {
+const commandRegister = async (GUILD_ID, clientItem) => {
+    if(clientItem) { client = clientItem; }
+
     const rest = new REST().setToken(BOT_TOKEN);
     const guildName = client.guilds.cache.find(guild => guild.id === GUILD_ID).name;
     (async () => {
