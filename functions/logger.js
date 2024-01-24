@@ -5,7 +5,7 @@ const composeTime = () => {
     const now = new Date();
 
     const day = now.getDate().toString().length < 2 ? `0${now.getDate()}` : now.getDate();
-    const month = now.getMonth().toString().length < 2 ? `0${now.getMonth() + 1}` : now.getMonth() + 1;
+    const month = (now.getMonth() + 1).toString().length < 2 ? `0${now.getMonth() + 1}` : now.getMonth() + 1;
     const year = now.getFullYear();
 
     const hours = now.getHours().toString().length < 2 ? `0${now.getHours()}` : now.getHours();
