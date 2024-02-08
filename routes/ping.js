@@ -24,10 +24,10 @@ router.post('/ping', staty, async (req, res) => {
 });
 
 router.get('/ping', staty, async (req, res) => {
-    const { id } = req.query;
+    const { id, size } = req.query;
 
     try {
-        const allPing = await Ping.find({ api_id: id }).sort({date: 'desc'}).limit(288);
+        const allPing = await Ping.find({ api_id: id }).sort({date: 'desc'}).limit(size || 288);
 
         res.status(200).json({ data: allPing, message: 'All ping find for last 24 hours' });
     }

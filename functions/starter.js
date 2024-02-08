@@ -20,7 +20,6 @@ const statyStarter = async (guildId, guild) => {
       const { role, channel } = setup.data.data;
       const statsChannel = guild.channels.cache.find(statsChannel => statsChannel.id === channel);
 
-      // List all guildId api
       try {
         const allApiRequest = await axios({
           method: "get",
@@ -35,8 +34,6 @@ const statyStarter = async (guildId, guild) => {
 
         const allApiList = allApiRequest.data.data;
         let pingArray = [];
-
-        // Lancement de tout les pings
 
         allApiList.map((item, index) => {
           statyPing(item, {
