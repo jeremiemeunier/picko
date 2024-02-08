@@ -26,8 +26,13 @@ router.post('/ping', staty, async (req, res) => {
 router.get('/ping', staty, async (req, res) => {
     const { id, size } = req.query;
 
+    let requestedSize = 0;
+
+    if(size) { requestedSize = size; }
+    else { requestedSize = 288; }
+
     try {
-        const allPing = await Ping.find({ api_id: id }).sort({date: 'desc'}).limit(size || 288);
+        const allPing = await Ping.find({ api_id: id }).sort({date: 'desc'}).limit(requestedSize);
 
         res.status(200).json({ data: allPing, message: 'All ping find for last 24 hours' });
     }
