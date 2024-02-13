@@ -24,7 +24,7 @@ router.post('/ping', staty, async (req, res) => {
 });
 
 router.get('/ping/extern', staty, async (req, res) => {
-  const { adress, guild } = req.query;
+  const { adress, guild, size } = req.query;
 
   try {
       const allPing = await Ping.find({ guild_id: guild, api_adress: adress }).sort({ date: 'desc' }).limit(size || 288);
