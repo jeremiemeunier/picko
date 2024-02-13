@@ -23,11 +23,22 @@ router.post('/ping', staty, async (req, res) => {
     catch(error) { logger(`🔴 [api:ping:post] Route error : ${error}`); }
 });
 
+router.get('/ping/extern', staty, async (req, res) => {
+  const { adress, guild } = req.query;
+
+  try {
+      const allPing = await Ping.find({ guild_id: guild, api_adress: adress }).sort({ date: 'desc' }).limit(size || 288);
+
+      res.status(200).json({ data: allPing, message: 'All ping find for last 24 hours' });
+  }
+  catch(error) { logger(`🔴 [api:ping:get] Route error : ${error}`); }
+});
+
 router.get('/ping', staty, async (req, res) => {
     const { id, size } = req.query;
 
     try {
-        const allPing = await Ping.find({ api_id: id }).sort({date: 'desc'}).limit(size || 288);
+        const allPing = await Ping.find({ api_id: id }).sort({ date: 'desc' }).limit(size || 288);
 
         res.status(200).json({ data: allPing, message: 'All ping find for last 24 hours' });
     }
