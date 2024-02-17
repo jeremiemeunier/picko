@@ -28,7 +28,7 @@ router.get("/api/all", staty, async (req, res) => {
   const { guild } = req.query;
 
   try {
-    const allApi = await Api.find({ guild_id: guild });
+    const allApi = await Api.find({ guild_id: { $eq: guild } });
 
     if (!allApi) {
       res.status(404).json({ message: "No api find for this guild" });
@@ -44,7 +44,7 @@ router.get("/api/all", staty, async (req, res) => {
 router.get("/api/id/", staty, async (req, res) => {
   const { id } = req.query;
   try {
-    const allApi = await Api.findById({ _id: id });
+    const allApi = await Api.findById({ _id: { $eq: id } });
 
     if (!allApi) {
       res.status(404).json({ message: "No api find for this guild" });
@@ -61,7 +61,7 @@ router.delete("/api/remove", staty, async (req, res) => {
   const { id } = req.query;
 
   try {
-    await Api.findByIdAndRemove({ _id: id });
+    await Api.findByIdAndRemove({ _id: { $eq: id } });
     res.status(200).json({ message: "Api removed", data: id });
   } catch (error) {
     logger(`🔴 [api:add_api:remove] ${error}`);
