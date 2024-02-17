@@ -2,6 +2,10 @@
 
 Staty is a discord bot that allows you to monitor the status of your APIs regularly and automatically.
 
+[![Node.js Package](https://github.com/DigitalTeaCompany/staty/actions/workflows/npm-publish-github-packages.yml/badge.svg)](https://github.com/DigitalTeaCompany/staty/actions/workflows/npm-publish-github-packages.yml)
+
+[![Docker Image CI](https://github.com/DigitalTeaCompany/staty/actions/workflows/docker-image.yml/badge.svg)](https://github.com/DigitalTeaCompany/staty/actions/workflows/docker-image.yml)
+
 <div align="center">
     <p><img src="https://1.images.cdn.digitalteacompany.fr/digitalteacompany/github/staty_couv.png" alt="Staty" /></p>
 </div>
