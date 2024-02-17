@@ -13,30 +13,30 @@ const commands = {
           name: "name",
           description: "An api name",
           type: 3,
-          required: true
+          required: true,
         },
         {
           name: "adress",
           description: "An api adress",
           type: 3,
-          required: true
+          required: true,
         },
         {
           name: "role",
           description: "A role",
           type: 8,
-          required: false
-        }
-      ]
+          required: false,
+        },
+      ],
     },
     {
       name: "remove",
       description: "Remove an api of the bind",
-      type: 1
-    }
-  ]
+      type: 1,
+    },
+  ],
 };
 
 module.exports = {
-  data: commands
-}
+  data: commands,
+};

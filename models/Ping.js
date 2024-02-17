@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ping = mongoose.model("Ping", {
-    api_name: String,
-    state: Boolean,
-    date: String,
-    guild: String,
-    api_id: String
+  api_name: String,
+  state: Boolean,
+  date: String,
+  guild: String,
+  api_id: String,
 });
 
-module.exports = ping
+module.exports = ping;
