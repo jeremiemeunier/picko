@@ -61,7 +61,7 @@ router.delete("/api/remove", staty, async (req, res) => {
   const { id } = req.query;
 
   try {
-    await Api.findByIdAndRemove({ _id: id });
+    await Api.findByIdAndDelete({ _id: id });
     res.status(200).json({ message: "Api removed", data: id });
   } catch (error) {
     logger(`🔴 [api:add_api:remove] ${error}`);
