@@ -1,7 +1,7 @@
 const { Events } = require("discord.js");
 const axios = require("axios");
 const { logger } = require("../../../functions/logger");
-const { BOT_ID } = require("../../../config/secret.json");
+const BOT_ID = process.env.BOT_ID;
 
 const commandConfigInit = (clientItem) => {
   const client = clientItem;

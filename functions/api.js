@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const { MONGODB_URL } = require("../config/secret.json");
+const MONGODB_URL = process.env.MONGODB_URL;
 const { logger } = require("../functions/logger");
 
 const api = () => {

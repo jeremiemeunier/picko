@@ -1,6 +1,6 @@
 {
-    "options": {
-        "wait": 300000,
-        "color": ""
-    }
+  "options": {
+    "wait": 300000,
+    "color": ""
+  }
 }

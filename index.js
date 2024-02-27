@@ -1,4 +1,4 @@
-const { BOT_TOKEN } = require("./config/secret.json");
+const BOT_TOKEN = process.env.BOT_TOKEN;
 const { Client, GatewayIntentBits, Partials, Events } = require("discord.js");
 const client = new Client({
   intents: [

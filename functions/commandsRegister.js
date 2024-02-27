@@ -1,7 +1,8 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { REST, Routes } = require("discord.js");
-const { BOT_ID, BOT_TOKEN } = require("../config/secret.json");
+const BOT_TOKEN = process.env.BOT_TOKEN;
+const BOT_ID = process.env.BOT_ID;
 const { logger } = require("../functions/logger");
 
 const commands = [];
