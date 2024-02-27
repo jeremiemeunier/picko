@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:20.11.1-slim
 
 RUN apt-get update && apt-get install -y tzdata
 ENV TZ=Europe/Paris
@@ -10,4 +10,4 @@ RUN npm i
 
 COPY . .
 
-CMD ["node", "index.js"]
+CMD ["node", "--env-file=.env", "index.js"]
