@@ -1,5 +1,5 @@
 const { options } = require("../config/global.json");
-const { BOT_ID } = require("../config/secret.json");
+const BOT_ID = process.env.BOT_ID;
 const { color, wait } = options;
 const { EmbedBuilder, ChannelType, time } = require("discord.js");
 const axios = require("axios");

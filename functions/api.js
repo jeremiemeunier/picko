@@ -1,24 +1,16 @@
 const express = require("express");
 const app = express();
-const RateLimit = require("express-rate-limit");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const { MONGODB_URL } = require("../config/secret.json");
+const MONGODB_URL = process.env.MONGODB_URL;
 const { logger } = require("../functions/logger");
 
 const api = () => {
-  const limiter = RateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-  });
-
-  app.use(limiter);
   app.use(express.json());
   app.use(cors());
 
   // BDD
-
   try {
     mongoose.connect(MONGODB_URL);
   } catch (error) {

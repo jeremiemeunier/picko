@@ -1,4 +1,4 @@
-const { BOT_ID } = require("../config/secret.json");
+const BOT_ID = process.env.BOT_ID;
 const axios = require("axios");
 const { logger } = require("./logger");
 const { statyPing } = require("./tester");
