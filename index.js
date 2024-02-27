@@ -1,5 +1,4 @@
-const { BOT_TOKEN, BOT_ID } = require("./config/secret.json");
-const axios = require("axios");
+const { BOT_TOKEN } = require("./config/secret.json");
 const { Client, GatewayIntentBits, Partials, Events } = require("discord.js");
 const client = new Client({
   intents: [
@@ -33,7 +32,7 @@ const booter = () => {
   commandRegisterInit(client);
   interactionCreateEventInit(client);
 
-  allGuilds.map((item, index) => {
+  allGuilds.map((item) => {
     statyStarter(item.id, item);
   });
 
