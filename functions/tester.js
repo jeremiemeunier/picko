@@ -31,31 +31,39 @@ const statyPing = async (apiData, params) => {
       .setDescription(`You are added to this thread to monitoring api`);
     let pingThread;
 
-    if (
-      state.threads.cache.find((thread) =>
-        thread.name.endsWith(apiData.api_name)
-      )
-    ) {
-      pingThread = state.threads.cache.find((thread) =>
-        thread.name.endsWith(apiData.api_name)
-      );
-      pingThread.setName(`🚀 ${apiData.api_name}`);
-    } else {
-      pingThread = await state.threads.create({
-        name: `🚀 ${apiData.api_name}`,
-        autoArchiveDuration: 60,
-        reason: `Dedicated thread for pinging api ${apiData.api_name}`,
-        type: ChannelType.PrivateThread,
-      });
+    try {
+      if (
+        state.threads.cache.find((thread) =>
+          thread.name.endsWith(apiData.api_name)
+        )
+      ) {
+        pingThread = state.threads.cache.find((thread) =>
+          thread.name.endsWith(apiData.api_name)
+        );
+        pingThread.setName(`🚀 ${apiData.api_name}`);
+      } else {
+        pingThread = await state.threads.create({
+          name: `🚀 ${apiData.api_name}`,
+          autoArchiveDuration: 60,
+          reason: `Dedicated thread for pinging api ${apiData.api_name}`,
+          type: ChannelType.PrivateThread,
+        });
+      }
+    } catch (error) {
+      logger(`🔴 [ping:find_thread] ${error}`);
     }
 
-    const message = await pingThread.send({
-      embeds: [initThreadEmbed],
-      content: `<@&${apiData.role === null ? role : apiData.role}>`,
-    });
-    const messagePingInit = await pingThread.send({
-      embeds: [pingInit, pingEmbed],
-    });
+    try {
+      const message = await pingThread.send({
+        embeds: [initThreadEmbed],
+        content: `<@&${apiData.role === null ? role : apiData.role}>`,
+      });
+      const messagePingInit = await pingThread.send({
+        embeds: [pingInit, pingEmbed],
+      });
+    } catch (error) {
+      logger(`🔴 [ping:create_message] ${error}`);
+    }
 
     try {
       const pingInterval = setInterval(
