@@ -7,12 +7,8 @@ const axios = require("axios");
 const { logger } = require("./logger");
 
 const statyPing = async (apiData, params) => {
-  let waitingTime;
   const { state, role, guild } = params;
-
-  {
-    wait >= 300000 ? (waitingTime = wait) : (waitingTime = 300000);
-  }
+  const waitingTime = wait >= 300000 ? wait : 300000;
 
   try {
     let lastPingState = 0;
@@ -71,9 +67,7 @@ const statyPing = async (apiData, params) => {
           const now = new Date();
 
           try {
-            const isPinging = await axios({
-              method: "get",
-              url: "http://localhost:3000/api/id",
+            const isPinging = await axios.get("/api/id", {
               params: {
                 id: apiData._id,
               },
@@ -85,24 +79,25 @@ const statyPing = async (apiData, params) => {
             try {
               const request = await axios({
                 method: "get",
-                url: apiData.api_adress,
+                baseUrl: apiData.api_adress,
               });
 
               try {
-                await axios({
-                  method: "post",
-                  url: `http://localhost:3000/ping`,
-                  data: {
+                await axios.post(
+                  "/ping",
+                  {
                     name: apiData.api_name,
                     state: true,
                     date: now,
                     guild: guild.id,
                     api: apiData._id,
                   },
-                  headers: {
-                    statyid: BOT_ID,
-                  },
-                });
+                  {
+                    headers: {
+                      statyid: BOT_ID,
+                    },
+                  }
+                );
               } catch (error) {
                 logger(`🔴 [ping:database:register] ${error}`);
               }
