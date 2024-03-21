@@ -1,7 +1,7 @@
 import { version } from "../package.json";
 const tag = `staty[${version}] `;
 
-const composeTime = () => {
+export const composeTime = () => {
   const now = new Date();
 
   const day =
