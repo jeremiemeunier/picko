@@ -31,8 +31,8 @@ router.get("/ping/extern", staty, async (req, res) => {
   const { adress, guild, size } = req.query;
 
   try {
-    const apiId = await findOne({ guild_id: guild, api_adress: adress });
-    const allPing = await find({ api_id: apiId._id })
+    const apiId = await Ping.findOne({ guild_id: guild, api_adress: adress });
+    const allPing = await Ping.find({ api_id: apiId._id })
       .sort({ date: "desc" })
       .limit(size || 288);
 
@@ -49,7 +49,7 @@ router.get("/ping", staty, async (req, res) => {
   const { id, size } = req.query;
 
   try {
-    const allPing = await find({ api_id: id })
+    const allPing = await Ping.find({ api_id: id })
       .sort({ date: "desc" })
       .limit(size || 288);
 
