@@ -1,9 +1,10 @@
-const express = require("express");
-const router = express.Router();
-const Api = require("../models/Api");
-const staty = require("../middlewares/staty");
+import { Router } from "express";
+import Api, { find, findById, findByIdAndDelete } from "../models/Api";
+import { staty } from "../middlewares/staty";
 
-const { logger } = require("../functions/logger");
+const router = Router();
+
+import { logger } from "../functions/logger";
 
 router.post("/api/add", staty, async (req, res) => {
   const { guild, role, name, adress } = req.body;
@@ -28,7 +29,7 @@ router.get("/api/all", staty, async (req, res) => {
   const { guild } = req.query;
 
   try {
-    const allApi = await Api.find({ guild_id: { $eq: guild } });
+    const allApi = await find({ guild_id: { $eq: guild } });
 
     if (!allApi) {
       res.status(404).json({ message: "No api find for this guild" });
@@ -44,7 +45,7 @@ router.get("/api/all", staty, async (req, res) => {
 router.get("/api/id/", staty, async (req, res) => {
   const { id } = req.query;
   try {
-    const allApi = await Api.findById({ _id: id });
+    const allApi = await findById({ _id: id });
 
     if (!allApi) {
       res.status(404).json({ message: "No api find for this guild" });
@@ -61,7 +62,7 @@ router.delete("/api/remove", staty, async (req, res) => {
   const { id } = req.query;
 
   try {
-    await Api.findByIdAndDelete({ _id: id });
+    await findByIdAndDelete({ _id: id });
     res.status(200).json({ message: "Api removed", data: id });
   } catch (error) {
     logger(`🔴 [api:add_api:remove] ${error}`);
@@ -69,4 +70,4 @@ router.delete("/api/remove", staty, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

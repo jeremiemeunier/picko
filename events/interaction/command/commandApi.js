@@ -1,15 +1,15 @@
-const {
+import {
   Events,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
   ActionRowBuilder,
-} = require("discord.js");
-const axios = require("axios");
-const { logger } = require("../../../functions/logger");
+} from "discord.js";
+import axios from "axios";
+import { logger } from "../../../functions/logger";
 const BOT_ID = process.env.BOT_ID;
-const { newApiStarter } = require("../../../functions/starter");
+import { newApiStarter } from "../../../functions/starter";
 
-const commandApiInit = (clientItem) => {
+export const commandApiInit = (clientItem) => {
   const client = clientItem;
 
   client.on(Events.InteractionCreate, async (interaction) => {
@@ -140,5 +140,3 @@ const commandApiInit = (clientItem) => {
     }
   });
 };
-
-module.exports = { commandApiInit };

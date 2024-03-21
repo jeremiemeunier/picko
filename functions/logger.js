@@ -1,4 +1,4 @@
-const { version } = require("../package.json");
+import { version } from "../package.json";
 const tag = `staty[${version}] `;
 
 const composeTime = () => {
@@ -34,8 +34,6 @@ const composeTime = () => {
   return `[${day}/${month}/${year} ${hours}:${minutes}:${seconds}.${miliseconds}]`;
 };
 
-const logger = (content) => {
+export const logger = (content) => {
   console.log(`${composeTime()} ${tag}${content}`);
 };
-
-module.exports = { logger };

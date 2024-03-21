@@ -1,12 +1,10 @@
-const { commandApiInit } = require("./interaction/command/commandApi");
-const { commandConfigInit } = require("./interaction/command/commandConfig");
-const { commandStatsInit } = require("./interaction/command/commandStats");
+import { commandApiInit } from "./interaction/command/commandApi";
+import { commandConfigInit } from "./interaction/command/commandConfig";
+import { commandStatsInit } from "./interaction/command/commandStats";
 
-const interactionCreateEventInit = (client) => {
+export const interactionCreateEventInit = (client) => {
   // Commands
   commandStatsInit(client);
   commandConfigInit(client);
   commandApiInit(client);
 };
-
-module.exports = { interactionCreateEventInit };

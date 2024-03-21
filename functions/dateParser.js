@@ -1,4 +1,4 @@
-const dateParser = (ajd) => {
+export const dateParser = (ajd) => {
   let ret = "";
   if (ajd == undefined) {
     ajd = new Date();
@@ -20,5 +20,3 @@ const dateParser = (ajd) => {
   }
   return ret;
 };
-
-module.exports = { dateParser };
