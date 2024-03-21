@@ -30,7 +30,9 @@ const booter = () => {
 
   logger("🟢 [database:use] Using database for statistics");
   api();
-  logger(`🟢 [api:launch] Lauching API on port 3000`);
+  logger(
+    `🟢 [api:launch] Lauching API on port ${process.env.DEV === "1" ? "4000" : "3000"}`
+  );
 
   commandRegisterInit(client);
   interactionCreateEventInit(client);
