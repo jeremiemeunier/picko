@@ -38,7 +38,9 @@ export const api = () => {
     });
 
     app.listen(process.env.DEV === "1" ? 4000 : 3000, () => {
-      logger(`🚀 [api:server:launch] Started on port 3000`);
+      logger(
+        `🚀 [api:server:launch] Started on port ${process.env.DEV === "1" ? "4000" : "3000"}`
+      );
     });
   } catch (error) {
     logger(`🔴 [api:server] An error occured on api : ${error}`);
