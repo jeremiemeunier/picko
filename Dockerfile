@@ -11,4 +11,4 @@ RUN yarn
 
 COPY . .
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "prod"]
