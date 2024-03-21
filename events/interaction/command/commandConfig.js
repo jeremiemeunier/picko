@@ -1,9 +1,9 @@
-const { Events } = require("discord.js");
-const axios = require("axios");
-const { logger } = require("../../../functions/logger");
+import { Events } from "discord.js";
+import axios from "axios";
+import { logger } from "../../../functions/logger";
 const BOT_ID = process.env.BOT_ID;
 
-const commandConfigInit = (clientItem) => {
+export const commandConfigInit = (clientItem) => {
   const client = clientItem;
 
   client.on(Events.InteractionCreate, async (interaction) => {
@@ -39,5 +39,3 @@ const commandConfigInit = (clientItem) => {
     }
   });
 };
-
-module.exports = { commandConfigInit };

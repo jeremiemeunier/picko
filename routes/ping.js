@@ -1,10 +1,11 @@
-const express = require("express");
-const router = express.Router();
-const Ping = require("../models/Ping");
-const Api = require("../models/Api");
-const staty = require("../middlewares/staty");
+import { Router } from "express";
+import Ping, { find } from "../models/Ping";
+import { findOne } from "../models/Api";
+import { staty } from "../middlewares/staty";
 
-const { logger } = require("../functions/logger");
+const router = Router();
+
+import { logger } from "../functions/logger";
 
 router.post("/ping", staty, async (req, res) => {
   const { name, state, date, guildId, api } = req.body;
@@ -30,8 +31,8 @@ router.get("/ping/extern", staty, async (req, res) => {
   const { adress, guild, size } = req.query;
 
   try {
-    const apiId = await Api.findOne({ guild_id: guild, api_adress: adress });
-    const allPing = await Ping.find({ api_id: apiId._id })
+    const apiId = await findOne({ guild_id: guild, api_adress: adress });
+    const allPing = await find({ api_id: apiId._id })
       .sort({ date: "desc" })
       .limit(size || 288);
 
@@ -48,7 +49,7 @@ router.get("/ping", staty, async (req, res) => {
   const { id, size } = req.query;
 
   try {
-    const allPing = await Ping.find({ api_id: id })
+    const allPing = await find({ api_id: id })
       .sort({ date: "desc" })
       .limit(size || 288);
 
@@ -61,4 +62,4 @@ router.get("/ping", staty, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

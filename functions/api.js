@@ -1,18 +1,19 @@
-const express = require("express");
+import express, { json } from "express";
+import cors from "cors";
+import { connect } from "mongoose";
+
 const app = express();
-const cors = require("cors");
-const mongoose = require("mongoose");
-
 const MONGODB_URL = process.env.MONGODB_URL;
-const { logger } = require("../functions/logger");
+import { logger } from "../functions/logger";
+import { staty } from "../middlewares/staty";
 
-const api = () => {
-  app.use(express.json());
+export const api = () => {
+  app.use(json());
   app.use(cors());
 
   // BDD
   try {
-    mongoose.connect(MONGODB_URL);
+    connect(MONGODB_URL);
   } catch (error) {
     logger(`🔴 [api:database] Database connect : ${error}`);
   }
@@ -23,9 +24,9 @@ const api = () => {
     const configRoute = require("../routes/config");
     const apiRoute = require("../routes/api");
 
-    app.use(pingRoute);
-    app.use(configRoute);
-    app.use(apiRoute);
+    app.use(pingRoute, staty);
+    app.use(configRoute, staty);
+    app.use(apiRoute, staty);
 
     app.get("/", (req, res) => {
       res.status(200).json({ message: "Bienvenue sur le backend de Staty" });
@@ -36,7 +37,7 @@ const api = () => {
       res.status(404).json({ message: "This route do not exist" });
     });
 
-    app.listen(3000, () => {
+    app.listen(process.env.DEV === "1" ? 4000 : 3000, () => {
       logger(`🚀 [api:server:launch] Started on port 3000`);
     });
   } catch (error) {
@@ -44,4 +45,4 @@ const api = () => {
   }
 };
 
-module.exports = { api };
+export default { api };

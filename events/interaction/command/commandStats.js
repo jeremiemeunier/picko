@@ -1,14 +1,14 @@
-const {
+import {
   Events,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
   ActionRowBuilder,
-} = require("discord.js");
-const axios = require("axios");
-const { logger } = require("../../../functions/logger");
+} from "discord.js";
+import axios from "axios";
+import { logger } from "../../../functions/logger";
 const BOT_ID = process.env.BOT_ID;
 
-const commandStatsInit = (clientItem) => {
+export const commandStatsInit = (clientItem) => {
   const client = clientItem;
 
   client.on(Events.InteractionCreate, async (interaction) => {
@@ -81,7 +81,7 @@ const commandStatsInit = (clientItem) => {
   });
 };
 
-const statsMaker = async (id) => {
+export const statsMaker = async (id) => {
   let returnString = "";
 
   try {
@@ -113,5 +113,3 @@ const statsMaker = async (id) => {
     logger(`🔴 [api:call] API Call : ${error}`);
   }
 };
-
-module.exports = { commandStatsInit };

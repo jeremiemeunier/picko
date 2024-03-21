@@ -1,9 +1,10 @@
-const express = require("express");
-const router = express.Router();
-const Config = require("../models/Config");
-const staty = require("../middlewares/staty");
+import { Router } from "express";
+import Config, { findOne } from "../models/Config";
+import { staty } from "../middlewares/staty";
 
-const { logger } = require("../functions/logger");
+const router = Router();
+
+import { logger } from "../functions/logger";
 
 router.post("/setup", staty, async (req, res) => {
   const { guild, channel, role } = req.body;
@@ -26,7 +27,7 @@ router.get("/setup", staty, async (req, res) => {
   const { guild } = req.query;
 
   try {
-    const setup = await Config.findOne({ guild_id: guild });
+    const setup = await findOne({ guild_id: guild });
 
     if (!setup) {
       res.status(404).json({ message: "No configuration for this guild" });
@@ -39,4 +40,4 @@ router.get("/setup", staty, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

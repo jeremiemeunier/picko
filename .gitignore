@@ -6,5 +6,6 @@ secret.json
 archives
 *.zip
 
-.env
+*.lock
+*.env
 *.sh

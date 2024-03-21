@@ -1,4 +1,4 @@
-const { version } = require("../package.json");
+import { version } from "../package.json";
 const tag = `staty[${version}] `;
 
 const composeTime = () => {
@@ -25,15 +25,15 @@ const composeTime = () => {
       ? `0${now.getSeconds()}`
       : now.getSeconds();
   const miliseconds =
-    now.getMilliseconds().toString().length < 3
-      ? `0${now.getMilliseconds()}`
-      : now.getMilliseconds();
+    now.getMilliseconds().toString().length === 1
+      ? `00${now.getMilliseconds()}`
+      : now.getMilliseconds().length === 2
+        ? `0${now.getMilliseconds()}`
+        : now.getMilliseconds();
 
   return `[${day}/${month}/${year} ${hours}:${minutes}:${seconds}.${miliseconds}]`;
 };
 
-const logger = async (content) => {
+export const logger = (content) => {
   console.log(`${composeTime()} ${tag}${content}`);
 };
-
-module.exports = { logger };
