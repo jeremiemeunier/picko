@@ -29,7 +29,7 @@ export const statyStarter = async (guildId, guild) => {
         setInterval(() => {
           try {
             statsChannel.setTopic(
-              `**Started at :** ${start} — Last ping at : ${composeTime(new Date())}`
+              `**Started at :** ${start} — **Last ping at :** ${composeTime(new Date())}`
             );
           } catch (error) {
             logger(`🔴 [starter:update_topic_interval] ${error}`);
@@ -51,6 +51,8 @@ export const statyStarter = async (guildId, guild) => {
 
         const allApiList = allApiRequest.data.data;
         let pingArray = [];
+
+        logger(`🟢 [starter:starting] Start all pings`);
 
         allApiList.map((item) => {
           statyPing(item, {
