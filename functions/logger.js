@@ -24,14 +24,19 @@ const composeTime = () => {
     now.getSeconds().toString().length < 2
       ? `0${now.getSeconds()}`
       : now.getSeconds();
-  const miliseconds =
-    now.getMilliseconds().toString().length === 1
-      ? `00${now.getMilliseconds()}`
-      : now.getMilliseconds().length === 2
-        ? `0${now.getMilliseconds()}`
-        : now.getMilliseconds();
+  const miliseconds = () => {
+    switch (now.getMilliseconds().toString().length) {
+      case 1:
+        return `00${now.getMilliseconds()}`;
+        break;
+      case 2:
+        return `0${now.getMilliseconds()}`;
+      default:
+        return now.getMilliseconds();
+    }
+  };
 
-  return `[${day}/${month}/${year} ${hours}:${minutes}:${seconds}.${miliseconds}]`;
+  return `[${day}/${month}/${year} ${hours}:${minutes}:${seconds}.${miliseconds()}]`;
 };
 
 export const logger = (content) => {
