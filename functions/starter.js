@@ -1,6 +1,6 @@
 const BOT_ID = process.env.BOT_ID;
 import axios from "axios";
-import { logger } from "./logger";
+import { composeTime, logger } from "./logger";
 import { statyPing } from "./tester";
 
 export const statyStarter = async (guildId, guild) => {
@@ -15,10 +15,29 @@ export const statyStarter = async (guildId, guild) => {
     });
 
     if (setup.data.data) {
-      const { role, channel } = setup.data.data;
+      const { role, channel, waiting } = setup.data.data;
       const statsChannel = guild.channels.cache.find(
         (statsChannel) => statsChannel.id === channel
       );
+
+      const wait = waiting >= 300000 ? waiting : 300000;
+      const start = composeTime(new Date());
+
+      try {
+        statsChannel.setTopic(`**Started at :** ${start}`);
+
+        setInterval(() => {
+          try {
+            statsChannel.setTopic(
+              `**Started at :** ${start} — Last ping at : ${composeTime(new Date())}`
+            );
+          } catch (error) {
+            logger(`🔴 [starter:update_topic_interval] ${error}`);
+          }
+        }, wait);
+      } catch (error) {
+        logger(`🔴 [starter:update_topic] ${error}`);
+      }
 
       try {
         const allApiRequest = await axios.get("/api/all", {
@@ -33,25 +52,13 @@ export const statyStarter = async (guildId, guild) => {
         const allApiList = allApiRequest.data.data;
         let pingArray = [];
 
-        allApiList.map((item, index) => {
+        allApiList.map((item) => {
           statyPing(item, {
             state: statsChannel,
             role: role,
             guild: guild,
+            wait: waiting,
           });
-
-          pingArray.push(item.api_name);
-        });
-
-        const allThreads = statsChannel.threads.cache;
-        await allThreads.map((thread) => {
-          if (pingArray.indexOf(thread.name.slice(3)) < 0) {
-            try {
-              thread.delete();
-            } catch (error) {
-              logger(`🔴 | ${error}`);
-            }
-          }
         });
       } catch (error) {
         logger(`🔴 [starter:get_all_api] ${error}`);
