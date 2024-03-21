@@ -6,8 +6,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /app
 COPY package.json ./
-RUN npm i
+RUN yarn
 
 COPY . .
 
-CMD ["node", "--env-file=.env", "index.js"]
+CMD ["yarn", "prod"]
