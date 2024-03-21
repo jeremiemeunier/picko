@@ -1,5 +1,5 @@
 const BOT_TOKEN = process.env.BOT_TOKEN;
-const { Client, GatewayIntentBits, Partials, Events } = require("discord.js");
+import { Client, GatewayIntentBits, Partials, Events } from "discord.js";
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -11,16 +11,19 @@ const client = new Client({
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
-const { logger } = require("./functions/logger");
-const { api } = require("./functions/api");
-const {
+import axios from "axios";
+
+import { logger } from "./functions/logger";
+import { api } from "./functions/api";
+import {
   commandRegisterInit,
   commandRegister,
-} = require("./functions/commandsRegister");
-const {
-  interactionCreateEventInit,
-} = require("./events/interactionCreateEvent");
-const { statyStarter } = require("./functions/starter");
+} from "./functions/commandsRegister";
+import { interactionCreateEventInit } from "./events/interactionCreateEvent";
+import { statyStarter } from "./functions/starter";
+
+axios.defaults.baseURL =
+  process.env.DEV === "1" ? "http://localhost:4000" : "http://localhost:3000";
 
 const booter = () => {
   const allGuilds = client.guilds.cache;
