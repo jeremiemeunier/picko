@@ -1,13 +1,11 @@
 const BOT_ID = process.env.BOT_ID;
-const axios = require("axios");
-const { logger } = require("./logger");
-const { statyPing } = require("./tester");
+import axios from "axios";
+import { logger } from "./logger";
+import { statyPing } from "./tester";
 
-const statyStarter = async (guildId, guild) => {
+export const statyStarter = async (guildId, guild) => {
   try {
-    const setup = await axios({
-      method: "get",
-      url: "http://localhost:3000/setup",
+    const setup = await axios.get("/setup", {
       params: {
         guild: guildId,
       },
@@ -23,9 +21,7 @@ const statyStarter = async (guildId, guild) => {
       );
 
       try {
-        const allApiRequest = await axios({
-          method: "get",
-          url: "http://localhost:3000/api/all",
+        const allApiRequest = await axios.get("/api/all", {
           params: {
             guild: guildId,
           },
@@ -66,11 +62,9 @@ const statyStarter = async (guildId, guild) => {
   }
 };
 
-const newApiStarter = async (guild, apiId) => {
+export const newApiStarter = async (guild, apiId) => {
   try {
-    const setup = await axios({
-      method: "get",
-      url: "http://localhost:3000/setup",
+    const setup = await axios.get("/setup", {
       params: {
         guild: guild.id,
       },
@@ -87,9 +81,7 @@ const newApiStarter = async (guild, apiId) => {
 
       // List all guildId api
       try {
-        const apiRequest = await axios({
-          method: "get",
-          url: `http://localhost:3000/api/id`,
+        const apiRequest = await axios.get("/api/id", {
           headers: {
             statyid: BOT_ID,
           },
@@ -106,9 +98,7 @@ const newApiStarter = async (guild, apiId) => {
         });
       } catch (error) {
         try {
-          const apiRequest = await axios({
-            method: "get",
-            url: `http://localhost:3000/api/all`,
+          const apiRequest = await axios.get("/api/all", {
             headers: {
               statyid: BOT_ID,
             },
@@ -143,5 +133,3 @@ const newApiStarter = async (guild, apiId) => {
     logger(`🔴 [new_starter:get_setup] ${error}`);
   }
 };
-
-module.exports = { statyStarter, newApiStarter };
