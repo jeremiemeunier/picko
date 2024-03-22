@@ -1,16 +1,15 @@
-const BOT_ID = process.env.BOT_ID;
-import axios from "axios";
+import StatyAxios from "../libs/StatyAxios";
 import { composeTime, logger } from "./logger";
 import { statyPing } from "./tester";
 
 export const statyStarter = async (guildId, guild) => {
   try {
-    const setup = await axios.get("/setup", {
+    const setup = await StatyAxios.get("/setup", {
       params: {
         guild: guildId,
       },
       headers: {
-        statyid: BOT_ID,
+        statyid: process.env.BOT_ID,
       },
     });
 
@@ -40,12 +39,12 @@ export const statyStarter = async (guildId, guild) => {
       }
 
       try {
-        const allApiRequest = await axios.get("/api/all", {
+        const allApiRequest = await StatyAxios.get("/api/all", {
           params: {
             guild: guildId,
           },
           headers: {
-            statyid: BOT_ID,
+            statyid: process.env.BOT_ID,
           },
         });
 
@@ -73,12 +72,12 @@ export const statyStarter = async (guildId, guild) => {
 
 export const newApiStarter = async (guild, apiId) => {
   try {
-    const setup = await axios.get("/setup", {
+    const setup = await StatyAxios.get("/setup", {
       params: {
         guild: guild.id,
       },
       headers: {
-        statyid: BOT_ID,
+        statyid: process.env.BOT_ID,
       },
     });
 
@@ -90,9 +89,9 @@ export const newApiStarter = async (guild, apiId) => {
 
       // List all guildId api
       try {
-        const apiRequest = await axios.get("/api/id", {
+        const apiRequest = await StatyAxios.get("/api/id", {
           headers: {
-            statyid: BOT_ID,
+            statyid: process.env.BOT_ID,
           },
           params: {
             id: apiId,
@@ -107,9 +106,9 @@ export const newApiStarter = async (guild, apiId) => {
         });
       } catch (error) {
         try {
-          const apiRequest = await axios.get("/api/all", {
+          const apiRequest = await StatyAxios.get("/api/all", {
             headers: {
-              statyid: BOT_ID,
+              statyid: process.env.BOT_ID,
             },
             params: {
               guild: guild.id,
