@@ -1,5 +1,13 @@
-const BOT_TOKEN = process.env.BOT_TOKEN;
 import { Client, GatewayIntentBits, Partials, Events } from "discord.js";
+import { logger } from "./functions/logger";
+import { api } from "./functions/api";
+import {
+  commandRegisterInit,
+  commandRegister,
+} from "./functions/commandsRegister";
+import { interactionCreateEventInit } from "./events/interactionCreateEvent";
+import { statyStarter } from "./functions/starter";
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -10,20 +18,6 @@ const client = new Client({
   ],
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
-
-import axios from "axios";
-
-import { logger } from "./functions/logger";
-import { api } from "./functions/api";
-import {
-  commandRegisterInit,
-  commandRegister,
-} from "./functions/commandsRegister";
-import { interactionCreateEventInit } from "./events/interactionCreateEvent";
-import { statyStarter } from "./functions/starter";
-
-axios.defaults.baseURL =
-  process.env.DEV === "1" ? "http://localhost:4000" : "http://localhost:3000";
 
 const booter = () => {
   const allGuilds = client.guilds.cache;
@@ -51,4 +45,4 @@ const booter = () => {
 client.on("ready", () => {
   booter();
 });
-client.login(BOT_TOKEN);
+client.login(process.env.BOT_TOKEN);
