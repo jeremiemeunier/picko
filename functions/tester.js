@@ -1,6 +1,7 @@
 import { EmbedBuilder, ChannelType, time } from "discord.js";
 import axios from "axios";
 import { logger } from "./logger";
+import StatyAxios from "../libs/StatyAxios";
 
 export const statyPing = async (apiData, params) => {
   const { state, role, guild, wait } = params;
@@ -19,7 +20,7 @@ export const statyPing = async (apiData, params) => {
 
       try {
         // check if this api has removed from watching
-        const apiCheck = await axios.get("/api/id", {
+        const apiCheck = await StatyAxios.get("/api/id", {
           params: {
             id: apiData._id,
           },
@@ -32,15 +33,12 @@ export const statyPing = async (apiData, params) => {
 
         try {
           // now check health of api endpoint
-          await axios({
-            method: "get",
-            url: apiFetchedData.api_adress,
-          });
+          await axios.get(apiFetchedData.api_adress);
 
           // api respond with an success code
           // register the ping to indicate an up api
           try {
-            await axios.post(
+            await StatyAxios.post(
               "/ping",
               {
                 name: apiFetchedData.api_name,
@@ -80,11 +78,10 @@ export const statyPing = async (apiData, params) => {
             }
           }
         } catch (error) {
-          console.log(error);
           // api respond with an error code
           // register the ping to indicate a down api
           try {
-            await axios.post(
+            await StatyAxios.post(
               "/ping",
               {
                 name: apiFetchedData.api_name,
