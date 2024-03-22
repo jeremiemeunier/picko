@@ -1,11 +1,15 @@
 import express, { json } from "express";
 import cors from "cors";
 import { connect } from "mongoose";
-
-const app = express();
-const MONGODB_URL = process.env.MONGODB_URL;
 import { logger } from "../functions/logger";
 import { staty } from "../middlewares/staty";
+
+const app = express();
+
+// route importer
+import pingRoute from "../routes/ping";
+import configRoute from "../routes/config";
+import apiRoute from "../routes/api";
 
 export const api = () => {
   app.use(json());
@@ -13,17 +17,13 @@ export const api = () => {
 
   // BDD
   try {
-    connect(MONGODB_URL);
+    connect(process.env.MONGODB_URL);
   } catch (error) {
     logger(`🔴 [api:database] Database connect : ${error}`);
   }
 
   try {
     // API
-    const pingRoute = require("../routes/ping");
-    const configRoute = require("../routes/config");
-    const apiRoute = require("../routes/api");
-
     app.use(pingRoute, staty);
     app.use(configRoute, staty);
     app.use(apiRoute, staty);
@@ -38,11 +38,11 @@ export const api = () => {
     });
 
     app.listen(process.env.DEV === "1" ? 4000 : 3000, () => {
-      logger(`🚀 [api:server:launch] Started on port 3000`);
+      logger(
+        `🚀 [api:server:launch] Started on port ${process.env.DEV === "1" ? "4000" : "3000"}`
+      );
     });
   } catch (error) {
     logger(`🔴 [api:server] An error occured on api : ${error}`);
   }
 };
-
-export default { api };

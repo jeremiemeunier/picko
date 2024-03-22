@@ -1,5 +1,13 @@
-const BOT_TOKEN = process.env.BOT_TOKEN;
-const { Client, GatewayIntentBits, Partials, Events } = require("discord.js");
+import { Client, GatewayIntentBits, Partials, Events } from "discord.js";
+import { logger } from "./functions/logger";
+import { api } from "./functions/api";
+import {
+  commandRegisterInit,
+  commandRegister,
+} from "./functions/commandsRegister";
+import { interactionCreateEventInit } from "./events/interactionCreateEvent";
+import { statyStarter } from "./functions/starter";
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -11,23 +19,14 @@ const client = new Client({
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
-const { logger } = require("./functions/logger");
-const { api } = require("./functions/api");
-const {
-  commandRegisterInit,
-  commandRegister,
-} = require("./functions/commandsRegister");
-const {
-  interactionCreateEventInit,
-} = require("./events/interactionCreateEvent");
-const { statyStarter } = require("./functions/starter");
-
 const booter = () => {
   const allGuilds = client.guilds.cache;
 
   logger("🟢 [database:use] Using database for statistics");
   api();
-  logger(`🟢 [api:launch] Lauching API on port 3000`);
+  logger(
+    `🟢 [api:launch] Lauching API on port ${process.env.DEV === "1" ? "4000" : "3000"}`
+  );
 
   commandRegisterInit(client);
   interactionCreateEventInit(client);
@@ -46,4 +45,4 @@ const booter = () => {
 client.on("ready", () => {
   booter();
 });
-client.login(BOT_TOKEN);
+client.login(process.env.BOT_TOKEN);

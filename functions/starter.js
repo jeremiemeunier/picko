@@ -1,61 +1,65 @@
-const BOT_ID = process.env.BOT_ID;
-const axios = require("axios");
-const { logger } = require("./logger");
-const { statyPing } = require("./tester");
+import StatyAxios from "../libs/StatyAxios";
+import { composeTime, logger } from "./logger";
+import { statyPing } from "./tester";
 
-const statyStarter = async (guildId, guild) => {
+export const statyStarter = async (guildId, guild) => {
   try {
-    const setup = await axios({
-      method: "get",
-      url: "http://localhost:3000/setup",
+    const setup = await StatyAxios.get("/setup", {
       params: {
         guild: guildId,
       },
       headers: {
-        statyid: BOT_ID,
+        statyid: process.env.BOT_ID,
       },
     });
 
     if (setup.data.data) {
-      const { role, channel } = setup.data.data;
+      const { role, channel, waiting } = setup.data.data;
       const statsChannel = guild.channels.cache.find(
         (statsChannel) => statsChannel.id === channel
       );
 
+      const wait = waiting >= 300000 ? waiting : 300000;
+      const start = composeTime(new Date());
+
       try {
-        const allApiRequest = await axios({
-          method: "get",
-          url: "http://localhost:3000/api/all",
+        statsChannel.setTopic(`**Started at :** ${start}`);
+
+        setInterval(() => {
+          try {
+            statsChannel.setTopic(
+              `**Started at :** ${start} — **Last ping at :** ${composeTime(new Date())}`
+            );
+          } catch (error) {
+            logger(`🔴 [starter:update_topic_interval] ${error}`);
+          }
+        }, wait);
+      } catch (error) {
+        logger(`🔴 [starter:update_topic] ${error}`);
+      }
+
+      try {
+        const allApiRequest = await StatyAxios.get("/api/all", {
           params: {
             guild: guildId,
           },
           headers: {
-            statyid: BOT_ID,
+            statyid: process.env.BOT_ID,
           },
         });
 
         const allApiList = allApiRequest.data.data;
         let pingArray = [];
 
-        allApiList.map((item, index) => {
+        logger(`🟢 [starter:starting] Start all pings`);
+
+        allApiList.map((item) => {
           statyPing(item, {
             state: statsChannel,
             role: role,
             guild: guild,
+            wait: waiting,
           });
-
-          pingArray.push(item.api_name);
-        });
-
-        const allThreads = statsChannel.threads.cache;
-        await allThreads.map((thread) => {
-          if (pingArray.indexOf(thread.name.slice(3)) < 0) {
-            try {
-              thread.delete();
-            } catch (error) {
-              logger(`🔴 | ${error}`);
-            }
-          }
         });
       } catch (error) {
         logger(`🔴 [starter:get_all_api] ${error}`);
@@ -66,16 +70,14 @@ const statyStarter = async (guildId, guild) => {
   }
 };
 
-const newApiStarter = async (guild, apiId) => {
+export const newApiStarter = async (guild, apiId) => {
   try {
-    const setup = await axios({
-      method: "get",
-      url: "http://localhost:3000/setup",
+    const setup = await StatyAxios.get("/setup", {
       params: {
         guild: guild.id,
       },
       headers: {
-        statyid: BOT_ID,
+        statyid: process.env.BOT_ID,
       },
     });
 
@@ -87,11 +89,9 @@ const newApiStarter = async (guild, apiId) => {
 
       // List all guildId api
       try {
-        const apiRequest = await axios({
-          method: "get",
-          url: `http://localhost:3000/api/id`,
+        const apiRequest = await StatyAxios.get("/api/id", {
           headers: {
-            statyid: BOT_ID,
+            statyid: process.env.BOT_ID,
           },
           params: {
             id: apiId,
@@ -106,11 +106,9 @@ const newApiStarter = async (guild, apiId) => {
         });
       } catch (error) {
         try {
-          const apiRequest = await axios({
-            method: "get",
-            url: `http://localhost:3000/api/all`,
+          const apiRequest = await StatyAxios.get("/api/all", {
             headers: {
-              statyid: BOT_ID,
+              statyid: process.env.BOT_ID,
             },
             params: {
               guild: guild.id,
@@ -143,5 +141,3 @@ const newApiStarter = async (guild, apiId) => {
     logger(`🔴 [new_starter:get_setup] ${error}`);
   }
 };
-
-module.exports = { statyStarter, newApiStarter };
