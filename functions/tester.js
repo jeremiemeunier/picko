@@ -29,7 +29,7 @@ export const statyPing = async (apiData, params) => {
           },
         });
 
-        apiFetchedData = apiCheck.data;
+        apiFetchedData = apiCheck.data.data;
 
         try {
           // now check health of api endpoint
