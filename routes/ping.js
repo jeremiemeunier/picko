@@ -32,16 +32,22 @@ router.get("/ping/extern", staty, async (req, res) => {
 
   try {
     const apiId = await Ping.findOne({ guild_id: guild, api_adress: adress });
-    const allPing = await Ping.find({ api_id: apiId._id })
-      .sort({ date: "desc" })
-      .limit(size || 288);
 
-    res
-      .status(200)
-      .json({ data: allPing, message: "All ping find for last 24 hours" });
+    try {
+      const allPing = await Ping.find({ api_id: apiId._id })
+        .sort({ date: "desc" })
+        .limit(size || 288);
+
+      res
+        .status(200)
+        .json({ data: allPing, message: "All ping find for last 24 hours" });
+    } catch (error) {
+      logger(`🔴 [api:ping:get_second_phase] Route error : ${error}`);
+      res.status(500).json({ message: "Somethings went wrong", error: error });
+    }
   } catch (error) {
     logger(`🔴 [api:ping:get] Route error : ${error}`);
-    res.status(500).json({ message: "Somethings went wrong" });
+    res.status(500).json({ message: "Somethings went wrong", error: error });
   }
 });
 
