@@ -1,10 +1,9 @@
 import { Router } from "express";
-import Api, { find, findById, findByIdAndDelete } from "../models/Api";
+import Api from "../models/Api";
 import { staty } from "../middlewares/staty";
+import { logger } from "../functions/logger";
 
 const router = Router();
-
-import { logger } from "../functions/logger";
 
 router.post("/api/add", staty, async (req, res) => {
   const { guild, role, name, adress } = req.body;
