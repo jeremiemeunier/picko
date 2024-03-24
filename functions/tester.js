@@ -100,7 +100,7 @@ export const statyPing = async (apiData, params) => {
           }
 
           // check previous state of api
-          if (lastApiState === 1 || lastApiState === 0) {
+          if (lastApiState >= 0) {
             /*
              * last ping is start ping or up
              * create a thread to ping and indicate error
