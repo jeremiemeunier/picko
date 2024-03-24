@@ -1,6 +1,6 @@
 import { Router } from "express";
-import Ping, { find } from "../models/Ping";
-import { findOne } from "../models/Api";
+import Ping from "../models/Ping";
+import Api from "../models/Api";
 import { staty } from "../middlewares/staty";
 
 const router = Router();
@@ -31,7 +31,7 @@ router.get("/ping/extern", staty, async (req, res) => {
   const { adress, guild, size } = req.query;
 
   try {
-    const apiId = await Ping.findOne({ guild_id: guild, api_adress: adress });
+    const apiId = await Api.findOne({ guild_id: guild, api_adress: adress });
 
     try {
       const allPing = await Ping.find({ api_id: apiId._id })
