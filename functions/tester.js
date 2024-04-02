@@ -56,7 +56,7 @@ export const statyPing = async (apiData, params) => {
             logger(`🔴 [ping:database:register] ${error}`);
           }
 
-          if (lastApiState < 0) {
+          if (lastApiState <= 0) {
             if (
               state.threads.cache.find((thread) =>
                 thread.name.endsWith(apiFetchedData.api_name)
@@ -107,12 +107,22 @@ export const statyPing = async (apiData, params) => {
              * send error message for console error
              */
             try {
-              threadPing = await state.threads.create({
-                name: `🔴 ${apiFetchedData.api_name}`,
-                autoArchiveDuration: 60,
-                reason: `Dedicated thread for pinging api ${apiFetchedData.api_name}`,
-                type: ChannelType.PrivateThread,
-              });
+              if (
+                state.threads.cache.find((thread) =>
+                  thread.name.endsWith(apiFetchedData.api_name)
+                )
+              ) {
+                threadPing = state.threads.cache.find((thread) =>
+                  thread.name.endsWith(apiFetchedData.api_name)
+                );
+              } else {
+                threadPing = await state.threads.create({
+                  name: `🔴 ${apiFetchedData.api_name}`,
+                  autoArchiveDuration: 60,
+                  reason: `Dedicated thread for pinging api ${apiFetchedData.api_name}`,
+                  type: ChannelType.PrivateThread,
+                });
+              }
 
               // Creating embed and send
               const pingInit = new EmbedBuilder()
