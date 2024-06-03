@@ -52,7 +52,7 @@
 
 ### `0.1.4`
 
-- Modifies the announcement to use the dedicated role ID if configured<br>
+- Modifies the announcement to use the dedicated role ID if configured
 
 ```json
 {
