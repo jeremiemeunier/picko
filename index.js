@@ -25,7 +25,9 @@ const booter = () => {
   logger("🟢 [database:use] Using database for statistics");
   api();
   logger(
-    `🟢 [api:launch] Lauching API on port ${process.env.DEV === "1" ? "4000" : "3000"}`
+    `🟢 [api:launch] Lauching API on port ${
+      process.env.DEV === "1" ? "4000" : "3000"
+    }`
   );
 
   commandRegisterInit(client);
