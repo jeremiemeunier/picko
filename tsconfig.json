@@ -7,5 +7,5 @@
     "strict": true,
     "esModuleInterop": true
   },
-  "include": ["app", "data", "events"]
+  "include": ["app"]
 }
