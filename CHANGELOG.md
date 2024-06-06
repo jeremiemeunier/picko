@@ -7,6 +7,12 @@
 
 ## Changelog
 
+### `2.0.0`
+
+- Now staty use dedicated mongodb instance
+- Move to builded version using typescript
+- Logs are now grouped by day and by api
+
 ### `1.0.0`
 
 - Now staty create a thread only on error ping and delete this thread on next success ping on api
