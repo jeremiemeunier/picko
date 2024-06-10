@@ -3,14 +3,14 @@ import {
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
   ActionRowBuilder,
+  Client,
 } from "discord.js";
 import axios from "axios";
-import { logger } from "../../../functions/logger";
-const BOT_ID = process.env.BOT_ID;
+import logs from "../../../functions/logs";
 
-export const commandStatsInit = (clientItem) => {
-  const client = clientItem;
+const { BOT_ID } = process.env;
 
+export const commandStatsInit = (client: Client) => {
   client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     const { commandName } = interaction;
@@ -35,7 +35,7 @@ export const commandStatsInit = (clientItem) => {
           .setCustomId("api_select")
           .setPlaceholder("Choose an api")
           .addOptions(
-            allApiData.map((item) => {
+            allApiData.map((item: any) => {
               const { api_name, api_adress, _id } = item;
               return new StringSelectMenuOptionBuilder()
                 .setLabel(api_name)
@@ -43,7 +43,7 @@ export const commandStatsInit = (clientItem) => {
                 .setValue(_id);
             })
           );
-        const row = new ActionRowBuilder().addComponents(select);
+        const row: any = new ActionRowBuilder().addComponents(select);
         const response = await interaction.reply({
           content: "Choose an api",
           components: [row],
@@ -51,8 +51,8 @@ export const commandStatsInit = (clientItem) => {
         });
 
         try {
-          const collectorFilter = (i) => i.user.id === interaction.user.id;
-          const confirmation = await response.awaitMessageComponent({
+          const collectorFilter = (i: any) => i.user.id === interaction.user.id;
+          const confirmation: any = await response.awaitMessageComponent({
             filter: collectorFilter,
             time: 60000,
           });
@@ -64,24 +64,24 @@ export const commandStatsInit = (clientItem) => {
               content: `Last 24 hours pings for **${values}** ${statsView}`,
               components: [],
             });
-          } catch (error) {
-            logger(`🔴 [api:stats:list] ${error}`);
+          } catch (error: any) {
+            logs("error", "api:stats:list", error);
           }
-        } catch (error) {
+        } catch (error: any) {
           await interaction.editReply({
             content: "Response not received within 1 minute, cancelling !",
             components: [],
           });
-          logger(`🔴 [api:stats:no_response] ${error}`);
+          logs("error", "api:stats:no_response", error);
         }
-      } catch (error) {
-        logger(`🔴 [api:stats:command] ${error}`);
+      } catch (error: any) {
+        logs("error", "api:command", error);
       }
     }
   });
 };
 
-export const statsMaker = async (id) => {
+export const statsMaker = async (id: any) => {
   let returnString = "";
 
   try {
@@ -98,7 +98,7 @@ export const statsMaker = async (id) => {
 
     const { data } = allPings.data;
 
-    data.map((item, index) => {
+    data.map((item: any) => {
       const { state } = item;
 
       if (state) {
@@ -109,7 +109,7 @@ export const statsMaker = async (id) => {
     });
 
     return "```" + returnString + "```";
-  } catch (error) {
-    logger(`🔴 [api:call] API Call : ${error}`);
+  } catch (error: any) {
+    logs("error", "api:call", error);
   }
 };
