@@ -56,7 +56,7 @@ route.get("/ping/extern", staty, async (req, res) => {
 
 route.post("/ping/:id", staty, async (req, res) => {
   const { id } = req.params;
-  const { state, date } = req.body;
+  const { state, date, guild_id } = req.body;
 
   const buildedDate = new Date().toLocaleDateString("fr-FR");
 
@@ -83,6 +83,7 @@ route.post("/ping/:id", staty, async (req, res) => {
     } else {
       try {
         const newDay = new Ping({
+          guild_id: guild_id,
           api_id: id,
           day: buildedDate,
           pings: [
