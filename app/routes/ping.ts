@@ -1,0 +1,107 @@
+import { Router } from "express";
+import Ping from "../models/Ping";
+import Api from "../models/Api";
+import { staty } from "../middlewares/staty";
+import logs from "../functions/logs";
+
+const route = Router();
+
+route.get("/ping/:id", staty, async (req, res) => {
+  const { id } = req.params;
+  const { size } = req.query;
+
+  try {
+    const findItemList = await Ping.find({ api_id: id })
+      .sort({ date: "desc" })
+      .limit(typeof size === "number" && size ? size : 90);
+
+    if (findItemList && findItemList.length > 0) {
+      res
+        .status(200)
+        .json({ message: "Find here all pings wanted", data: findItemList });
+    } else {
+      res.status(404).json({ message: "Item not found" });
+    }
+  } catch (error: any) {
+    logs("error", "api:route:ping:get:id", error);
+    res.status(500).json({ message: "Somethings went wrong" });
+  }
+});
+
+route.get("/ping/extern", staty, async (req, res) => {
+  const { adress, guild, size } = req.query;
+
+  try {
+    const findItem = await Api.findOne({ guild_id: guild, api_adress: adress });
+
+    if (findItem) {
+      try {
+        const findItemList = await Ping.find({ api_id: findItem._id })
+          .sort({ date: "desc" })
+          .limit(typeof size === "number" && size ? size : 90);
+        res.status(200).json({
+          data: findItemList,
+          message: "All ping find for last 24 hours",
+        });
+      } catch (error: any) {
+        logs("error", "api:route:ping:get:extern", error);
+        res.status(500).json({ message: "Somethings went wrong" });
+      }
+    }
+  } catch (error: any) {
+    logs("error", "api:route:ping:get:extern", error);
+    res.status(500).json({ message: "Somethings went wrong" });
+  }
+});
+
+route.post("/ping/:id", staty, async (req, res) => {
+  const { id } = req.params;
+  const { state, date } = req.body;
+
+  const buildedDate = new Date().toLocaleDateString("fr-FR");
+
+  try {
+    const findPingDoc = await Ping.findOne({ api_id: id, day: buildedDate });
+
+    if (findPingDoc) {
+      const dailyPings = findPingDoc.pings;
+      dailyPings.push({
+        state: state,
+        date: date,
+      });
+
+      try {
+        await Ping.updateOne(
+          { api_id: id, day: buildedDate },
+          { pings: dailyPings }
+        );
+
+        res.status(200).json({ message: "Ping saved" });
+      } catch (error: any) {
+        logs("error", "api:route:ping:post:update", error);
+      }
+    } else {
+      try {
+        const newDay = new Ping({
+          api_id: id,
+          day: buildedDate,
+          pings: [
+            {
+              state: state,
+              date: date,
+            },
+          ],
+        });
+        await newDay.save();
+
+        res.status(200).json({ message: "Ping saved" });
+      } catch (error: any) {
+        logs("error", "api:route:ping:post:create", error);
+      }
+    }
+  } catch (error: any) {
+    logs("error", "api:route:ping:post", error);
+  }
+});
+
+export default route;
