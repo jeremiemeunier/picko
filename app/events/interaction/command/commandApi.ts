@@ -3,15 +3,15 @@ import {
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
   ActionRowBuilder,
+  Guild,
+  Client,
 } from "discord.js";
 import axios from "axios";
-import { logger } from "../../../functions/logger";
-const BOT_ID = process.env.BOT_ID;
-import { newApiStarter } from "../../../functions/starter";
+import logs from "../../../functions/logs";
 
-export const commandApiInit = (clientItem) => {
-  const client = clientItem;
+const { BOT_ID } = process.env;
 
+export const commandApiInit = (client: Client) => {
   client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     const { commandName } = interaction;
@@ -25,10 +25,10 @@ export const commandApiInit = (clientItem) => {
           );
           const apiName = interaction.options.getString("name");
           const apiAdress = interaction.options.getString("adress");
-          let role = "";
+          let role: string | undefined | null = "";
 
           if (interaction.options.getRole("role")) {
-            role = interaction.options.getRole("role").id;
+            role = interaction.options.getRole("role")?.id;
           } else {
             role = null;
           }
@@ -52,13 +52,14 @@ export const commandApiInit = (clientItem) => {
               "Your api has added to ping list, await automatic restart for pinging",
             ephemeral: true,
           });
-          newApiStarter(guild, registerSetup.data.data._id);
-        } catch (error) {
-          logger(`🔴 [setup:global:api_command] API Call : ${error}`);
+        } catch (error: any) {
+          logs("error", "command:api:setup", error);
         }
       } else if (interaction.options.getSubcommand() === "remove") {
         const guildId = interaction.guildId;
-        const guild = client.guilds.cache.find((guild) => guild.id === guildId);
+        const guild = client.guilds.cache.find(
+          (guild: Guild) => guild.id === guildId
+        );
 
         try {
           const allApiRequest = await axios({
@@ -79,7 +80,7 @@ export const commandApiInit = (clientItem) => {
               .setCustomId("api_select")
               .setPlaceholder("Choose an api to remove")
               .addOptions(
-                allApiData.map((item) => {
+                allApiData.map((item: any) => {
                   const { api_name, api_adress, _id } = item;
                   return new StringSelectMenuOptionBuilder()
                     .setLabel(api_name)
@@ -87,7 +88,7 @@ export const commandApiInit = (clientItem) => {
                     .setValue(_id);
                 })
               );
-            const row = new ActionRowBuilder().addComponents(select);
+            const row: any = new ActionRowBuilder().addComponents(select);
             const response = await interaction.reply({
               content: "Choose an api to remove",
               components: [row],
@@ -95,8 +96,9 @@ export const commandApiInit = (clientItem) => {
             });
 
             try {
-              const collectorFilter = (i) => i.user.id === interaction.user.id;
-              const confirmation = await response.awaitMessageComponent({
+              const collectorFilter = (i: any) =>
+                i.user.id === interaction.user.id;
+              const confirmation: any = await response.awaitMessageComponent({
                 filter: collectorFilter,
                 time: 60000,
               });
@@ -117,22 +119,20 @@ export const commandApiInit = (clientItem) => {
                 interaction.editReply({
                   content: "Api removed from pinging",
                   components: [],
-                  ephemeral: false,
                 });
-                newApiStarter(guild, deleted.data.data[0]);
-              } catch (error) {
-                logger(`🔴 [commande:api:remove_request] ${error}`);
+              } catch (error: any) {
+                logs("error", "command:api:remove_request", error);
               }
-            } catch (error) {
+            } catch (error: any) {
               await interaction.editReply({
                 content: "Response not received within 1 minute, cancelling !",
                 components: [],
               });
-              logger(`🔴 [command:remove:api:no_response] ${error}`);
+              logs("error", "command:api:remove:no_response", error);
             }
           }
-        } catch (error) {
-          logger(`🔴 [command:api:remove] ${error}`);
+        } catch (error: any) {
+          logs("error", "command:api:remove", error);
         }
       } else {
         interaction.reply({ content: "Invalid command", ephemeral: true });
