@@ -7,6 +7,7 @@ import {
 } from "discord.js";
 import axios from "axios";
 import logs from "../../../functions/logs";
+import StatyAxios from "../../../libs/StatyAxios";
 
 const { BOT_ID } = process.env;
 
@@ -19,16 +20,14 @@ export const commandStatsInit = (client: Client) => {
       const guild = interaction.guildId;
 
       try {
-        const allApiRequest = await axios({
-          method: "get",
-          url: "http://localhost:3000/api/all",
-          params: {
-            guild: guild,
-          },
-          headers: {
-            statyid: BOT_ID,
-          },
-        });
+        const allApiRequest = await axios.get(
+          `http://localhost:3000/api/all/${guild}`,
+          {
+            headers: {
+              Authorization: `Bearer ${BOT_ID}`,
+            },
+          }
+        );
 
         const allApiData = allApiRequest.data.data;
         const select = new StringSelectMenuBuilder()
@@ -61,7 +60,7 @@ export const commandStatsInit = (client: Client) => {
           try {
             const statsView = await statsMaker(values);
             await interaction.editReply({
-              content: `Last 24 hours pings for **${values}** ${statsView}`,
+              content: `Last 90 days pings for **${values}**\r\n ${statsView}`,
               components: [],
             });
           } catch (error: any) {
@@ -82,33 +81,30 @@ export const commandStatsInit = (client: Client) => {
 };
 
 export const statsMaker = async (id: any) => {
-  let returnString = "";
+  const downTime = [];
+  const upTime = [];
+  const totalTime = [];
 
   try {
-    const allPings = await axios({
-      method: "get",
-      url: `http://localhost:3000/ping`,
-      headers: {
-        statyid: BOT_ID,
-      },
-      params: {
-        id: id,
-      },
-    });
+    const allPings = await StatyAxios.get(`/ping/${id}`);
 
     const { data } = allPings.data;
 
     data.map((item: any) => {
-      const { state } = item;
+      const { pings } = item;
 
-      if (state) {
-        returnString = returnString + "◼";
-      } else {
-        returnString = returnString + "◻";
-      }
+      pings.map((ping: any) => {
+        ping.state ? upTime.push(ping) : downTime.push(ping);
+        totalTime.push(ping);
+      });
     });
 
-    return "```" + returnString + "```";
+    const upTimePercent = (upTime.length / totalTime.length) * 100;
+    const downTimePercent = (downTime.length / totalTime.length) * 100;
+
+    return `Uptime : ${upTimePercent.toFixed(
+      2
+    )}% • Downtime : ${downTimePercent.toFixed(2)}%`;
   } catch (error: any) {
     logs("error", "api:call", error);
   }
