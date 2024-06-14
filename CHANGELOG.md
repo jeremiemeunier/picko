@@ -1,10 +1,22 @@
-## Incoming features
+# Incoming features
 
 - [x] Slash command for statistic when using database
 - [x] Auto rebind on existing thread wehn staty restart
 - [ ] Slash command for enforce ping on an specific API
+- [ ] Rework of all logs
 
 ## Changelog
+
+### `2.0.0`
+
+- Now staty use dedicated mongodb instance
+- Move to builded version using typescript
+- Logs are now grouped by day and by api
+
+### `1.0.0`
+
+- Now staty create a thread only on error ping and delete this thread on next success ping on api
+- Using fresh data on pinging api
 
 ### `0.1.9`
 
@@ -46,7 +58,7 @@
 
 ### `0.1.4`
 
-- Modifies the announcement to use the dedicated role ID if configured<br>
+- Modifies the announcement to use the dedicated role ID if configured
 
 ```json
 {

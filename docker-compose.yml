@@ -1,0 +1,32 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: staty_mongodb
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: staty_app,
+    ports:
+      - 3007:3000
+    env_file:
+      - .env
+    environment:
+      MONGODB_URL: mongodb://mongodb:27017/civdraftbot
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    restart: always
+
+volumes:
+  mongo-data:
+
+networks:
+  app-network:
