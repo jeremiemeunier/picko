@@ -70,7 +70,27 @@ export const testing = async (
         try {
           // now check health of api endpoint
           await axios.get(apiFetchedData.api_adress);
-          lastApiState = lastApiState + 1;
+
+          if (lastApiState < 0) {
+            lastApiState = 0;
+          } else {
+            lastApiState = lastApiState + 1;
+          }
+
+          if (lastApiState === 0) {
+            try {
+              const embed = new EmbedBuilder()
+                .setColor(parseInt("FFEC51", 16))
+                .setDescription(apiFetchedData.api_adress);
+
+              await params.state.send({
+                content: `<@&${params.role}> your api is now up !`,
+                embeds: [embed],
+              });
+            } catch (error: any) {
+              logs("error", "ping:send_message", error, params.guild.id);
+            }
+          }
 
           // api respond with an success code
           // register the ping to indicate an up api
@@ -100,7 +120,11 @@ export const testing = async (
               state: false,
             });
 
-            lastApiState = lastApiState - 1;
+            if (lastApiState > -1) {
+              lastApiState = -1;
+            } else {
+              lastApiState = lastApiState - 1;
+            }
 
             if (lastApiState === -1) {
               try {
@@ -109,7 +133,7 @@ export const testing = async (
                   .setDescription(apiFetchedData.api_adress);
 
                 await params.state.send({
-                  content: `<&@${params.role}> your api is down !`,
+                  content: `<@&${params.role}> your api is down !`,
                   embeds: [embed],
                 });
               } catch (error: any) {
