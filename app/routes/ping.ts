@@ -15,10 +15,61 @@ route.get("/ping/extern", staty, async (req, res) => {
     if (findItem) {
       try {
         const findItemList = await Ping.find({ api_id: findItem._id })
-          .sort({ date: "desc" })
+          .sort({ day: "desc" })
           .limit(typeof size === "number" && size ? size : 90);
         res.status(200).json({
           data: findItemList,
+          message: `All ping find for last ${size ? size : 90} days`,
+        });
+      } catch (error: any) {
+        logs("error", "api:route:ping:get:extern", error);
+        res.status(500).json({ message: "Somethings went wrong" });
+      }
+    } else {
+      res.status(404).json({ message: "Item not found" });
+    }
+  } catch (error: any) {
+    logs("error", "api:route:ping:get:extern", error);
+    res.status(500).json({ message: "Somethings went wrong" });
+  }
+});
+
+route.get("/ping/extern/stats", staty, async (req, res) => {
+  const { adress, guild, size } = req.query;
+
+  try {
+    const findItem = await Api.findOne({ guild_id: guild, api_adress: adress });
+
+    if (findItem) {
+      try {
+        const findItemList = await Ping.find({ api_id: findItem._id })
+          .sort({ day: "desc" })
+          .limit(typeof size === "number" && size ? size : 90);
+
+        // making stats directly
+        const uptime = [];
+        const downtime = [];
+
+        findItemList.map((status) => {
+          if (status.pings) {
+            status.pings.map((ping) =>
+              ping.state ? uptime.push(ping) : downtime.push(ping)
+            );
+          }
+        });
+
+        // response with stats
+        res.status(200).json({
+          data: {
+            uptime: (
+              (uptime.length / (downtime.length + uptime.length)) *
+              100
+            ).toFixed(2),
+            downtime: (
+              (downtime.length / (downtime.length + uptime.length)) *
+              100
+            ).toFixed(2),
+          },
           message: `All ping find for last ${size ? size : 90} days`,
         });
       } catch (error: any) {
@@ -40,7 +91,7 @@ route.get("/ping/:id", staty, async (req, res) => {
 
   try {
     const findItemList = await Ping.find({ api_id: id })
-      .sort({ date: "desc" })
+      .sort({ day: "desc" })
       .limit(typeof size === "number" && size ? size : 90);
 
     if (findItemList && findItemList.length > 0) {
