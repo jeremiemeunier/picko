@@ -1,4 +1,10 @@
-import { Channel, ThreadChannelResolvable, Guild, Role } from "discord.js";
+import {
+  Channel,
+  ThreadChannelResolvable,
+  Guild,
+  Role,
+  EmbedBuilder,
+} from "discord.js";
 import axios from "axios";
 import StatyAxios from "../libs/StatyAxios";
 import logs from "./logs";
@@ -30,7 +36,7 @@ export const testing = async (
     api_adress: String;
   },
   params: {
-    state: Channel;
+    state: any;
     role: Role;
     guild: Guild;
     wait: number;
@@ -64,6 +70,7 @@ export const testing = async (
         try {
           // now check health of api endpoint
           await axios.get(apiFetchedData.api_adress);
+          lastApiState = lastApiState + 1;
 
           // api respond with an success code
           // register the ping to indicate an up api
@@ -88,20 +95,27 @@ export const testing = async (
           // api respond with an error code
           // register the ping to indicate a down api
           try {
-            await StatyAxios.post(
-              "/ping",
-              {
-                name: apiFetchedData.api_name,
-                state: false,
-                date: now,
-                api: apiFetchedData._id,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${BOT_ID}`,
-                },
+            await StatyAxios.post(`/ping/${apiFetchedData._id}`, {
+              guild_id: params.guild.id,
+              state: false,
+            });
+
+            lastApiState = lastApiState - 1;
+
+            if (lastApiState === -1) {
+              try {
+                const embed = new EmbedBuilder()
+                  .setColor(parseInt("FFEC51", 16))
+                  .setDescription(apiFetchedData.api_adress);
+
+                await params.state.send({
+                  content: `<&@${params.role}> your api is down !`,
+                  embeds: [embed],
+                });
+              } catch (error: any) {
+                logs("error", "ping:send_message", error, params.guild.id);
               }
-            );
+            }
           } catch (error: any) {
             logs("error", "database:register", error);
           }
