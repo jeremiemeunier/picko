@@ -33,19 +33,15 @@ export const commandApiInit = (client: Client) => {
             role = null;
           }
 
-          const registerSetup = await axios({
-            method: "post",
-            url: "http://localhost:3000/api/add",
-            headers: {
-              statyid: BOT_ID,
-            },
-            data: {
-              guild: guildId,
-              role: role,
-              adress: apiAdress,
-              name: apiName,
-            },
-          });
+          const registerSetup = await axios.post(
+            `http://localhost:3000/api`,
+            { guild: guildId, role: role, adress: apiAdress, name: apiName },
+            {
+              headers: {
+                Authorization: `Bearer ${BOT_ID}`,
+              },
+            }
+          );
 
           await interaction.reply({
             content:
@@ -62,16 +58,14 @@ export const commandApiInit = (client: Client) => {
         );
 
         try {
-          const allApiRequest = await axios({
-            method: "get",
-            url: "http://localhost:3000/api/all",
-            params: {
-              guild: guildId,
-            },
-            headers: {
-              statyid: BOT_ID,
-            },
-          });
+          const allApiRequest = await axios.get(
+            `http://localhost:3000/api/all/${guildId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${BOT_ID}`,
+              },
+            }
+          );
 
           const allApiData = allApiRequest.data.data;
 
@@ -105,16 +99,14 @@ export const commandApiInit = (client: Client) => {
               const { values } = confirmation;
 
               try {
-                const deleted = await axios({
-                  method: "delete",
-                  url: "http://localhost:3000/api/remove",
-                  params: {
-                    id: values,
-                  },
-                  headers: {
-                    statyid: BOT_ID,
-                  },
-                });
+                const deleted = await axios.delete(
+                  `http://localhost:3000/api/${values}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${BOT_ID}`,
+                    },
+                  }
+                );
 
                 interaction.editReply({
                   content: "Api removed from pinging",
