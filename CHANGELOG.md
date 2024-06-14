@@ -2,10 +2,19 @@
 
 - [x] Slash command for statistic when using database
 - [x] Auto rebind on existing thread wehn staty restart
-- [ ] Slash command for enforce ping on an specific API
-- [ ] Rework of all logs
+- [ ] Button enforce ping on an specific API when is down
+- [x] Rework of all logs
 
 ## Changelog
+
+### `2.0.1`
+
+- Add new route `/ping/extern/stats` returning directly up and down time percentage
+- Fixing crash on getting a route without `Authorization` header
+- Staty send a message in configured channel with ping role associated on api to notify when api is down or reup
+- Reduce waiting time between two ping to 1 minute
+- Set default external port binding to `3007`
+- Docker image is now staged when is builded
 
 ### `2.0.0`
 
