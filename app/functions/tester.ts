@@ -49,9 +49,7 @@ export const testing = async (
   try {
     // on error create a thread to details error and ping user
     // on start and success nothings
-
     let lastApiState: number = 0;
-    let threadPing: ThreadChannelResolvable;
     let apiFetchedData: any;
 
     const pingInterval = setInterval(async () => {
@@ -130,7 +128,14 @@ export const testing = async (
               try {
                 const embed = new EmbedBuilder()
                   .setColor(parseInt("FFEC51", 16))
+                  .setTitle(apiFetchedData.api_name)
                   .setDescription(apiFetchedData.api_adress);
+                logs(
+                  null,
+                  "api:ping:down_api",
+                  `Api is down (${apiFetchedData.api_name}) [statyscore:${lastApiState}]`,
+                  params.guild.id
+                );
 
                 await params.state.send({
                   content: `<@&${params.role}> your api is down !`,
@@ -146,7 +151,12 @@ export const testing = async (
         }
       } catch (error: any) {
         // this api has removed from watching
-        logs("error", "ping:inactive:ping", error);
+        logs("error", "ping:inactive:ping", error.message);
+        logs(
+          "error",
+          "ping:inactive:ping",
+          `Cleaning interval (${pingInterval})`
+        );
         clearInterval(pingInterval);
       }
     }, waitingTime);
