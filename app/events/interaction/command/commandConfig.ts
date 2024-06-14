@@ -15,18 +15,19 @@ export const commandConfigInit = (client: Client) => {
         const channel = interaction.options.getChannel("channel")?.id;
         const role = interaction.options.getRole("role")?.id;
 
-        const registerSetup = await axios({
-          method: "post",
-          url: "http://localhost:3000/setup/",
-          headers: {
-            statyid: BOT_ID,
-          },
-          data: {
+        const registerSetup = await axios.post(
+          `http://localhost:3000/setup`,
+          {
             guild: guild,
             channel: channel,
             role: role,
           },
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${BOT_ID}`,
+            },
+          }
+        );
 
         await interaction.reply({
           content: "Your setup is ready",
