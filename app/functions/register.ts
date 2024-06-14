@@ -1,7 +1,7 @@
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { REST, Routes } from "discord.js";
-import { logs } from "./logs";
+import logs from "./logs";
 
 const commands: any[] = [];
 const foldersPath = join(__dirname, "../commands");
