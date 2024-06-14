@@ -1,14 +1,25 @@
-import {
-  EmbedBuilder,
-  ChannelType,
-  Channel,
-  ThreadChannelResolvable,
-  Guild,
-  Role,
-} from "discord.js";
+import { Channel, ThreadChannelResolvable, Guild, Role } from "discord.js";
 import axios from "axios";
 import StatyAxios from "../libs/StatyAxios";
 import logs from "./logs";
+
+export const restart: (props: any) => void = async ({ api, guild }) => {
+  try {
+    const setup = await StatyAxios.get(`/setup/${guild.id}`);
+    const statsChannel: any = guild.channels.cache.find(
+      (statsChannel: any) => statsChannel.id === setup.data.data.channel
+    );
+
+    testing(api, {
+      state: statsChannel,
+      role: setup.data.data.role,
+      guild: guild,
+      wait: setup.data.data?.wait,
+    });
+  } catch (error: any) {
+    logs("error", "command:tester", error, guild.id);
+  }
+};
 
 export const testing = async (
   api: {
@@ -26,7 +37,7 @@ export const testing = async (
   }
 ) => {
   const { BOT_ID } = process.env;
-  const { state, role, wait } = params;
+  const { wait } = params;
   const waitingTime = wait >= 300000 ? wait : 300000;
 
   try {
