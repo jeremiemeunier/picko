@@ -9,15 +9,16 @@ const commandFolders = readdirSync(foldersPath);
 
 for (const folder of commandFolders) {
   const commandsPath = join(foldersPath, folder);
-  const commandFiles = readdirSync(commandsPath).filter((file) =>
-    file.endsWith(".js")
+  const commandFiles = readdirSync(commandsPath).filter(
+    (file) => file.endsWith(".ts") || file.endsWith(".js")
   );
 
   for (const file of commandFiles) {
     const filePath = join(commandsPath, file);
     const command = require(filePath);
-    if ("data" in command) {
-      commands.push(command.data);
+
+    if ("default" in command) {
+      commands.push(command.default);
     } else {
       logs(
         "warning",
@@ -29,11 +30,10 @@ for (const folder of commandFolders) {
 }
 
 export const register_in_guild = async (guild: string) => {
-  const BOT = process.env.BOT_TOKEN;
-  const BOTID = process.env.BOT_ID;
+  const { BOT_TOKEN, BOT_ID } = process.env;
 
-  if (BOT && BOTID) {
-    const rest = new REST().setToken(BOT);
+  if (BOT_TOKEN && BOT_ID) {
+    const rest = new REST().setToken(BOT_TOKEN);
     (async () => {
       try {
         logs(
@@ -43,7 +43,7 @@ export const register_in_guild = async (guild: string) => {
           guild
         );
         const data: any = await rest.put(
-          Routes.applicationGuildCommands(BOTID, guild),
+          Routes.applicationGuildCommands(BOT_ID, guild),
           {
             body: commands,
           }
@@ -65,11 +65,10 @@ export const register_in_guild = async (guild: string) => {
 };
 
 export const register = async () => {
-  const BOT = process.env.BOT_TOKEN;
-  const BOTID = process.env.BOT_ID;
+  const { BOT_TOKEN, BOT_ID } = process.env;
 
-  if (BOT && BOTID) {
-    const rest = new REST().setToken(BOT);
+  if (BOT_TOKEN && BOT_ID) {
+    const rest = new REST().setToken(BOT_TOKEN);
     (async () => {
       try {
         logs(
@@ -77,7 +76,7 @@ export const register = async () => {
           "cmd:register",
           `Started refreshing ${commands.length} application (/) commands.`
         );
-        const data: any = await rest.put(Routes.applicationCommands(BOTID), {
+        const data: any = await rest.put(Routes.applicationCommands(BOT_ID), {
           body: commands,
         });
 

@@ -5,12 +5,9 @@ import { testing } from "./tester";
 
 export const staty = async (guild: Guild) => {
   try {
-    const setup = await StatyAxios.get("/setup", {
-      params: {
-        guild: guild.id,
-      },
+    const setup = await StatyAxios.get(`/setup/${guild.id}`, {
       headers: {
-        statyid: process.env.BOT_ID,
+        Authorization: `Bearer ${process.env.BOT_ID}`,
       },
     });
 
@@ -29,12 +26,9 @@ export const staty = async (guild: Guild) => {
       }
 
       try {
-        const fetchAllApi = await StatyAxios.get("/api/all", {
-          params: {
-            guild: guild.id,
-          },
+        const fetchAllApi = await StatyAxios.get(`/api/all/${guild.id}`, {
           headers: {
-            statyid: process.env.BOT_ID,
+            Authorization: `Bearer ${process.env.BOT_ID}`,
           },
         });
 

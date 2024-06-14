@@ -20,6 +20,7 @@ const api = () => {
   if (MONGODB_URL) {
     try {
       connect(MONGODB_URL);
+      logs("start", "api:database:connect", "Connected to database");
     } catch (error: any) {
       logs("error", "api:database:connect", error);
     }
@@ -39,7 +40,7 @@ const api = () => {
         res.status(404).json({ message: "This route do not exist" });
       });
 
-      app.listen(process.env.DEV === "1" ? 4000 : 3000, () => {
+      app.listen(3000, () => {
         logs("start", "api:binding", "Successfully bind on port 3000");
       });
     } catch (error: any) {
