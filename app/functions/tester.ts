@@ -57,12 +57,7 @@ export const testing = async (
 
       try {
         // check if this api has removed from watching
-        const apiCheck = await StatyAxios.get(`/api/${api._id}`, {
-          headers: {
-            Authorization: `Bearer ${BOT_ID}`,
-          },
-        });
-
+        const apiCheck = await StatyAxios.get(`/api/${api._id}`);
         apiFetchedData = apiCheck.data.data;
 
         try {
