@@ -7,7 +7,7 @@ RUN npm i
 COPY . .
 RUN npm run build
 
-FROM node:20-slim
+FROM node:20-slim as runner
 
 WORKDIR /app
 COPY --from=builder /app/dist /app
