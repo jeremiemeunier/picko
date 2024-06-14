@@ -12,7 +12,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: staty_app,
+    container_name: staty_app
     ports:
       - 3007:3000
     env_file:
