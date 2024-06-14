@@ -41,7 +41,7 @@ route.get("/api/all/:id", staty, async (req, res) => {
   }
 });
 
-route.post("/api/add", staty, async (req, res) => {
+route.post("/api", staty, async (req, res) => {
   const { guild, role, name, adress } = req.body;
 
   try {
