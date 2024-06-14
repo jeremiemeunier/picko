@@ -44,7 +44,7 @@ export const testing = async (
 ) => {
   const { BOT_ID } = process.env;
   const { wait } = params;
-  const waitingTime = wait >= 300000 ? wait : 300000;
+  const waitingTime = wait >= 60000 ? wait : 60000;
 
   try {
     // on error create a thread to details error and ping user
