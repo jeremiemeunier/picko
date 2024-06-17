@@ -49,7 +49,8 @@ const up_worker = async (
   try {
     await StatyAxios.put(`/api/ping/${_id}`, {
       state: true,
-      score: parseInt(staty_score.toFixed()) + 1,
+      score:
+        staty_score === undefined ? 0 : parseInt(staty_score.toFixed()) + 1,
     });
   } catch (error: any) {
     logs("error", "staty:worker:up:work:update", error, params.guild.id);
@@ -89,7 +90,8 @@ const down_worker = async (
   try {
     await StatyAxios.put(`/api/ping/${_id}`, {
       state: false,
-      score: parseInt(staty_score.toFixed()) - 1,
+      score:
+        staty_score === undefined ? 0 : parseInt(staty_score.toFixed()) - 1,
     });
   } catch (error: any) {
     logs("error", "staty:worker:down:work:update", error, params.guild.id);
