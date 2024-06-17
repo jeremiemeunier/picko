@@ -98,6 +98,26 @@ const down_worker = async (
   }
 };
 
+const save_ping = async (
+  api: ApiTypes,
+  params: {
+    state: any;
+    role: Role;
+    guild: Guild;
+    wait: number;
+  },
+  result: { up: boolean; failure?: string }
+) => {
+  try {
+    await StatyAxios.post(`/ping/${api._id}`, {
+      state: result.up,
+      guild_id: params.guild.id,
+    });
+  } catch (error: any) {
+    logs("error", "save:ping:axios:request", error, params.guild.id);
+  }
+};
+
 export const staty_worker = async (
   api: ApiTypes,
   params: {
@@ -109,6 +129,8 @@ export const staty_worker = async (
 ) => {
   const { api_adress } = api;
   const pingResult: { up: boolean; failure?: string } = await ping(api_adress);
+
+  save_ping(api, params, pingResult);
 
   if (pingResult.up) {
     // api is up
