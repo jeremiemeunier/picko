@@ -1,9 +1,25 @@
-import { Guild } from "discord.js";
+import { Client, Guild } from "discord.js";
 import StatyAxios from "../libs/StatyAxios";
 import logs, { composeTime } from "./logs";
-import { testing } from "./tester";
+import { staty_worker } from "./worker";
+import { ApiTypes } from "../interfaces/Api.types";
 
-export const staty = async (guild: Guild) => {
+export const __staty__init__ = async (client: Client) => {
+  // map all guilds
+  try {
+    const allGuilds = client.guilds.cache;
+    logs(
+      null,
+      "staty:start:all_guild",
+      "Starting all guild on Staty functions"
+    );
+    allGuilds.map(async (guild) => staty(guild));
+  } catch (error: any) {
+    logs("error", "staty:boot:all_guilds", error);
+  }
+};
+
+const get_setup = async (guild: Guild) => {
   try {
     const setup = await StatyAxios.get(`/setup/${guild.id}`, {
       headers: {
@@ -11,57 +27,64 @@ export const staty = async (guild: Guild) => {
       },
     });
 
-    if (setup.data.data) {
-      const { role, channel, waiting } = setup.data.data;
-      const statsChannel: any = guild.channels.cache.find(
-        (statsChannel) => statsChannel.id === channel
-      );
+    return setup.data.data;
+  } catch (error: any) {
+    logs("error", "staty:get:setup", error.message, guild.id);
+    return false;
+  }
+};
 
-      if (statsChannel) {
-        try {
-          statsChannel.setTopic(`**Started at :** ${composeTime()}`);
-        } catch (error: any) {
-          logs("error", "staty:update_topic_start", error, guild.id);
-        }
-      }
+const get_api_list = async (guild: Guild) => {
+  try {
+    const fetchData = await StatyAxios.get(`/api/all/${guild.id}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.BOT_ID}`,
+      },
+    });
+    return fetchData.data.data;
+  } catch (error: any) {
+    logs("error", "staty:get:guild:api:list", error.message, guild.id);
+    return false;
+  }
+};
 
+const staty = async (guild: Guild) => {
+  const config = await get_setup(guild);
+
+  if (config) {
+    const { role, channel, waiting } = config;
+    const guildChannel: any = guild.channels.cache.find(
+      (guildChannel) => guildChannel.id === channel
+    );
+
+    // setup topic of channel
+    if (guildChannel) {
       try {
-        const fetchAllApi = await StatyAxios.get(`/api/all/${guild.id}`, {
-          headers: {
-            Authorization: `Bearer ${process.env.BOT_ID}`,
-          },
-        });
-
-        const allGuildApi = fetchAllApi.data.data;
-
-        logs(
-          "success",
-          "staty:starting_ping",
-          "Successfully getting all api pings",
-          guild.id
-        );
-
-        allGuildApi.map(
-          (api: {
-            _id: string;
-            guild_id: String;
-            role: String;
-            api_name: String;
-            api_adress: String;
-          }) => {
-            testing(api, {
-              state: statsChannel,
-              role: role,
-              guild: guild,
-              wait: waiting,
-            });
-          }
-        );
+        guildChannel.setTopic(`**Started at :** ${composeTime()}`);
       } catch (error: any) {
-        logs("error", "staty:starter:launch", error, guild.id);
+        logs("error", "staty:update:topic:start", error, guild.id);
       }
     }
-  } catch (error: any) {
-    logs("error", "staty:get_setup", error, guild.id);
+
+    try {
+      const apiList = await get_api_list(guild);
+      apiList.map((api: ApiTypes) => {
+        staty_worker(api, {
+          state: guildChannel,
+          role: role,
+          guild: guild,
+          wait: waiting,
+        });
+      });
+    } catch (error: any) {
+      logs("error", "staty:starter:launch", error, guild.id);
+    }
+  } else {
+    logs(
+      "error",
+      "staty:setup",
+      "No config provided or init on this guild",
+      guild.id
+    );
   }
 };
