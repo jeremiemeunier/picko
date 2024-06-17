@@ -28,6 +28,7 @@
     "express-rate-limit": "^7.2.0",
     "lodash": "^4.17.21",
     "mongoose": "^8.4.0",
+    "node-cron": "^3.0.3",
     "remark": "^15.0.1",
     "remark-lint": "^9.1.2"
   },
