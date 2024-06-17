@@ -1,4 +1,5 @@
 export interface ApiTypes {
+  _id: String;
   guild_id: String;
   role: String;
   api_name: String;
