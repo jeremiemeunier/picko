@@ -51,7 +51,7 @@ const logs: (
     console.log(
       `${composeTime()}[${tag}]${composeState(state)}[${composeService(
         service
-      )}][${guild}] » ${content}`
+      )}][${guild.padEnd(22, " ")}] » ${content}`
     );
   } else {
     console.log(

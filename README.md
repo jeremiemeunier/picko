@@ -16,7 +16,7 @@ docker composer up -d --build
 
 ## Configuration files
 
-For configuration of Staty you must have this file : [.env.example](https://github.com/DigitalTeaCompany/staty/blob/main/.env.example).
+For configuration of Staty you must have this file : [.env](https://github.com/DigitalTeaCompany/staty/blob/main/.env.example).
 
 ### Configuration
 

@@ -1,5 +1,6 @@
 import { interactionCreateEventInit } from "./events/interactionCreateEvent";
-import { staty } from "./functions/staty";
+import { __staty__init__ } from "./functions/staty";
+import * as cron from "node-cron";
 import {
   Client,
   GatewayIntentBits,
@@ -55,7 +56,6 @@ const guild_boot = (guild: Guild) => {
       guild.id
     );
     register_in_guild(guild.id);
-    staty(guild);
   } catch (error: any) {
     logs("error", "booter:guild_starter", error, guild.id);
   }
@@ -63,32 +63,29 @@ const guild_boot = (guild: Guild) => {
 
 export const boot: () => void = async () => {
   logs("start", "booter", `Staty has started successfully`);
-
+  // update status
   status();
+  // launch api
+  api();
+  // start receive event from commands
+  interactionCreateEventInit(client);
 
   try {
-    // API
-    api();
-
-    try {
-      const allGuilds = client.guilds.cache;
-
-      allGuilds.map((guild) => {
-        guild_boot(guild);
-      });
-
-      interactionCreateEventInit(client);
-    } catch (error: any) {
-      logs("error", "booter", error);
-    }
+    const allGuilds = client.guilds.cache;
+    allGuilds.map((guild) => guild_boot(guild));
   } catch (error: any) {
-    logs("error", "api:server", error);
+    logs("error", "booter", error);
   }
 
   client.on(Events.GuildCreate, (guild: Guild) => {
     logs(null, "events:new_guild", "Join a new guild", guild.id);
     guild_boot(guild);
     status();
+  });
+
+  // starting cron for pings
+  cron.schedule("* * * * *", () => {
+    __staty__init__(client);
   });
 };
 

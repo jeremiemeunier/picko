@@ -8,6 +8,8 @@ const Api = model<ApiTypes>(
     role: String,
     api_name: String,
     api_adress: String,
+    last_ping: Boolean,
+    staty_score: Number,
   })
 );
 

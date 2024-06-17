@@ -1,11 +1,22 @@
-# Incoming features
+# Changelog
+
+## Incoming features
 
 - [x] Slash command for statistic when using database
 - [x] Auto rebind on existing thread wehn staty restart
-- [ ] Button enforce ping on an specific API when is down
+- [ ] ~Button enforce ping on an specific API when is down~
 - [x] Rework of all logs
+- [ ] Front gesture with a dedicated client space
+- [ ] Enable outside discord guild ping for personal usage
 
-## Changelog
+## Changes
+
+### `2.0.2`
+
+- Add new route to update score and state of api
+- Now staty auto ping all api all time
+- Staty get api adress with the header `statyping: 1151905859891376280`
+- Staty send a message with error on down api and a up message on reup
 
 ### `2.0.1`
 
