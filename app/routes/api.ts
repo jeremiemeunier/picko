@@ -50,6 +50,7 @@ route.post("/api", staty, async (req, res) => {
       role: role,
       api_name: name,
       api_adress: adress,
+      last_ping: true,
     });
     await newApi.save();
 
