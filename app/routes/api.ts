@@ -60,6 +60,29 @@ route.post("/api", staty, async (req, res) => {
   }
 });
 
+route.put("/api/ping/:id", staty, async (req, res) => {
+  const { id } = req.params;
+  const { score, state } = req.body;
+
+  try {
+    const updatedApi = await Api.findByIdAndUpdate(
+      { _id: id },
+      {
+        staty_score: score,
+        last_ping: state,
+      },
+      {
+        new: true,
+      }
+    );
+
+    res.status(200).json({ message: "Api updated", data: updatedApi });
+  } catch (error: any) {
+    logs("error", "api:update:api", error);
+    res.status(500).json({ message: "An error occured (catch)" });
+  }
+});
+
 route.delete("/api/:id", staty, async (req, res) => {
   const { id } = req.params;
 
