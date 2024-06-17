@@ -8,7 +8,6 @@ import {
 } from "discord.js";
 import axios from "axios";
 import logs from "../../../functions/logs";
-import { restart } from "../../../functions/tester";
 
 const { BOT_ID } = process.env;
 
@@ -49,8 +48,6 @@ export const commandApiInit = (client: Client) => {
               "Your api has added to ping list, await automatic restart for pinging",
             ephemeral: true,
           });
-
-          restart({ api: registerSetup.data.data, guild: guild });
         } catch (error: any) {
           logs("error", "command:api:setup", error);
         }
