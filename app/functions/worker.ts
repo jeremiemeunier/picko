@@ -8,14 +8,14 @@ const ping = async (adress: String) => {
   const { BOT_ID } = process.env;
 
   try {
-    axios.get(adress.toString(), {
+    await axios.get(adress.toString(), {
       headers: {
         statyping: BOT_ID,
       },
     });
     return { up: true };
   } catch (error: any) {
-    return { up: false, error: error.message };
+    return { up: false, failure: error.message };
   }
 };
 
@@ -64,7 +64,7 @@ const down_worker = async (
     guild: Guild;
     wait: number;
   },
-  result: { up: boolean; error?: string }
+  result: { up: boolean; failure?: string }
 ) => {
   const { api_adress, api_name, last_ping, staty_score, _id } = api;
 
@@ -73,7 +73,7 @@ const down_worker = async (
       const embed = new EmbedBuilder()
         .setColor(parseInt("E63B2E", 16))
         .setDescription(
-          `${api_adress.toString()}\r\n\`\`\`${result.error}\`\`\``
+          `${api_adress.toString()}\r\n\`\`\`${result.failure}\`\`\``
         );
 
       await params.state.send({
@@ -106,7 +106,7 @@ export const staty_worker = async (
   }
 ) => {
   const { api_adress } = api;
-  const pingResult: { up: boolean; error?: string } = await ping(api_adress);
+  const pingResult: { up: boolean; failure?: string } = await ping(api_adress);
 
   if (pingResult.up) {
     // api is up
