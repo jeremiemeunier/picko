@@ -12,5 +12,7 @@ export const staty = async (req: any, res: any, next: () => void) => {
     }
   } catch (error: any) {
     logs("error", "middleware", error);
+    logs("error", "middleware:requested_from", req.hostname);
+    res.status(403).json({ message: "Not authorized" });
   }
 };
