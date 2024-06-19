@@ -5,6 +5,7 @@ export interface UserTypes {
     firstname: String;
     lastname: String;
     discord_id: String;
+    avatar: String;
   };
   company: {
     name: String;
