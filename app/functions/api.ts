@@ -4,9 +4,10 @@ import { connect } from "mongoose";
 import { staty } from "../middlewares/staty";
 
 // route importer
-import pingRoute from "../routes/ping";
-import configRoute from "../routes/config";
-import apiRoute from "../routes/api";
+import { default as pingRoute } from "../routes/ping";
+import { default as configRoute } from "../routes/config";
+import { default as apiRoute } from "../routes/api";
+import { default as authRoute } from "../routes/auth";
 import logs from "./logs";
 
 const app = express();
@@ -30,6 +31,7 @@ const api = () => {
       app.use(pingRoute, staty);
       app.use(configRoute, staty);
       app.use(apiRoute, staty);
+      app.use(authRoute);
 
       app.get("/", (req, res) => {
         res.status(200).json({ message: "Bienvenue sur le backend de Staty" });
