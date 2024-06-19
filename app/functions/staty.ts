@@ -8,11 +8,6 @@ export const __staty__init__ = async (client: Client) => {
   // map all guilds
   try {
     const allGuilds = client.guilds.cache;
-    logs(
-      null,
-      "staty:start:all_guild",
-      "Starting all guild on Staty functions"
-    );
     allGuilds.map(async (guild) => staty(guild));
   } catch (error: any) {
     logs("error", "staty:boot:all_guilds", error);
