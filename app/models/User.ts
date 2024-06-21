@@ -9,7 +9,10 @@ const User = model<UserTypes>(
       username: String,
       firstname: String,
       lastname: String,
-      discord_id: { type: String, unique: true },
+      discord: {
+        id: { type: String, unique: true },
+        guilds: Object,
+      },
       avatar: String,
     },
     company: {
@@ -18,11 +21,10 @@ const User = model<UserTypes>(
       siret: { type: String, unique: true },
       tva: { type: String, unique: true },
     },
-    private: {
-      token: String,
-      salt: String,
-      hash: String,
-    },
+    token: String,
+    refresh_token: String,
+    expires_in: Number,
+    type: String,
   })
 );
 
