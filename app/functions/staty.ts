@@ -8,11 +8,6 @@ export const __staty__init__ = async (client: Client) => {
   // map all guilds
   try {
     const allGuilds = client.guilds.cache;
-    logs(
-      null,
-      "staty:start:all_guild",
-      "Starting all guild on Staty functions"
-    );
     allGuilds.map(async (guild) => staty(guild));
   } catch (error: any) {
     logs("error", "staty:boot:all_guilds", error);
@@ -56,15 +51,6 @@ const staty = async (guild: Guild) => {
     const guildChannel: any = guild.channels.cache.find(
       (guildChannel) => guildChannel.id === channel
     );
-
-    // setup topic of channel
-    if (guildChannel) {
-      try {
-        guildChannel.setTopic(`**Started at :** ${composeTime()}`);
-      } catch (error: any) {
-        logs("error", "staty:update:topic:start", error, guild.id);
-      }
-    }
 
     try {
       const apiList = await get_api_list(guild);
