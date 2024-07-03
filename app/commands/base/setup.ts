@@ -1,6 +1,6 @@
 export default {
   name: "setup",
-  description: "Make configuration for Staty",
+  description: "Make configuration for picko",
   default_member_permissions: 0,
   database: false,
   options: [
