@@ -1,17 +1,6 @@
 name: "picko_bot"
 
 services:
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb_picko
-    restart: always
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - app-network
-    ports:
-      - 27019:27017
-
   app:
     build:
       context: .
@@ -22,15 +11,5 @@ services:
     env_file:
       - .env
     environment:
-      MONGODB_URL: mongodb://mongodb:27017/picko
-    depends_on:
-      - mongodb
-    networks:
-      - app-network
+      MONGODB_URL: mongodb://host.docker.internal:27017/picko
     restart: always
-
-volumes:
-  mongo-data:
-
-networks:
-  app-network:
