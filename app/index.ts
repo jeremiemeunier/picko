@@ -1,5 +1,3 @@
-import { interactionCreateEventInit } from "./events/interactionCreateEvent";
-import { __staty__init__ } from "./functions/staty";
 import * as cron from "node-cron";
 import {
   Client,
@@ -24,8 +22,8 @@ const client = new Client({
 // ##### IMPORT ##### \\
 
 import logs from "./functions/logs";
-import api from "./functions/api";
 import { register_in_guild } from "./functions/register";
+import { __picko__init__ } from "./functions/picko";
 
 // ##### APP ##### \\
 
@@ -62,13 +60,9 @@ const guild_boot = (guild: Guild) => {
 };
 
 export const boot: () => void = async () => {
-  logs("start", "booter", `Staty has started successfully`);
+  logs("start", "booter", `picko has started successfully`);
   // update status
   status();
-  // launch api
-  api();
-  // start receive event from commands
-  interactionCreateEventInit(client);
 
   try {
     const allGuilds = client.guilds.cache;
@@ -85,7 +79,7 @@ export const boot: () => void = async () => {
 
   // starting cron for pings
   cron.schedule("* * * * *", () => {
-    __staty__init__(client);
+    __picko__init__(client);
   });
 };
 
