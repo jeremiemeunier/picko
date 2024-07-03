@@ -1,4 +1,4 @@
-const tag = `staty`;
+const tag = `picko`;
 
 export const composeTime: () => string = () => {
   const now = new Date();
