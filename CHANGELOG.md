@@ -3,7 +3,7 @@
 ## Incoming features
 
 - [x] Slash command for statistic when using database
-- [x] Auto rebind on existing thread wehn staty restart
+- [x] Auto rebind on existing thread wehn picko restart
 - [ ] ~Button enforce ping on an specific API when is down~
 - [x] Rework of all logs
 - [ ] Front gesture with a dedicated client space
@@ -14,28 +14,28 @@
 ### `2.0.2`
 
 - Add new route to update score and state of api
-- Now staty auto ping all api all time
-- Staty get api adress with the header `statyping: 1151905859891376280`
-- Staty send a message with error on down api and a up message on reup
+- Now picko auto ping all api all time
+- picko get api adress with the header `pickoping: 1151905859891376280`
+- picko send a message with error on down api and a up message on reup
 
 ### `2.0.1`
 
 - Add new route `/ping/extern/stats` returning directly up and down time percentage
 - Fixing crash on getting a route without `Authorization` header
-- Staty send a message in configured channel with ping role associated on api to notify when api is down or reup
+- picko send a message in configured channel with ping role associated on api to notify when api is down or reup
 - Reduce waiting time between two ping to 1 minute
 - Set default external port binding to `3007`
 - Docker image is now staged when is builded
 
 ### `2.0.0`
 
-- Now staty use dedicated mongodb instance
+- Now picko use dedicated mongodb instance
 - Move to builded version using typescript
 - Logs are now grouped by day and by api
 
 ### `1.0.0`
 
-- Now staty create a thread only on error ping and delete this thread on next success ping on api
+- Now picko create a thread only on error ping and delete this thread on next success ping on api
 - Using fresh data on pinging api
 
 ### `0.1.9`
@@ -72,7 +72,7 @@
 
 ### `0.1.5`
 
-- Staty now create only a thread with the name of API
+- picko now create only a thread with the name of API
 - Thread name has update on API ping
 - The delays parameter is now checked to be strictly `>=` to 5 minutes
 
@@ -88,15 +88,15 @@
 }
 ```
 
-- Staty now uses the Discord `Embed` element to send current status and last ping to global ping channel
-- Staty creates a thread on the ping message and marks the global or dedicated role to add all affected users
+- picko now uses the Discord `Embed` element to send current status and last ping to global ping channel
+- picko creates a thread on the ping message and marks the global or dedicated role to add all affected users
 
 ### `0.1.3`
 
-- Staty send a message to global ping channel
-- Staty update message on api update
-- Staty use 6 different state for api state :
-  - 🚀 Staty launch and wait first ping for state
+- picko send a message to global ping channel
+- picko update message on api update
+- picko use 6 different state for api state :
+  - 🚀 picko launch and wait first ping for state
   - 🟢 API is up ! Everything is good
   - 🟠 API is re-up ! Last ping : API is down but now is up
   - 🔴 API is down ! First ping
