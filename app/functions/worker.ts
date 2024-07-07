@@ -27,7 +27,7 @@ const ping = async (adress: String, _id: String) => {
 
 const save_ping = async (api: DomainModelTypes, result: PingResultType) => {
   try {
-    await pickoAxios.post(`/pings/${api._id}`, {
+    await pickoAxios.post(`/pings/automated/${api._id}`, {
       state: result.up,
       error: result?.failure,
       delay: result?.delay,
@@ -66,7 +66,7 @@ const up_worker = async (api: DomainModelTypes, pingResult: PingResultType) => {
 
   // now update last ping and score in database
   try {
-    await pickoAxios.put(`/domains/${_id}`, {
+    await pickoAxios.put(`/domains/automated/${_id}`, {
       state: true,
       score: score === undefined ? 0 : parseInt(score.toFixed()) + 1,
     });
@@ -108,7 +108,7 @@ const down_worker = async (
 
   // now update last ping and score in database
   try {
-    await pickoAxios.put(`/domains/${_id}`, {
+    await pickoAxios.put(`/domains/automated/${_id}`, {
       state: false,
       score: score === undefined ? 0 : parseInt(score.toFixed()) - 1,
     });
