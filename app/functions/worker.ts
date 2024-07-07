@@ -120,7 +120,6 @@ const down_worker = async (
 export const picko_worker = async (api: DomainModelTypes) => {
   const { adress } = api;
   const pingResult: PingResultType = await ping(adress, api._id);
-  logs(null, "picko:init:worker", `sta ${api._id}`);
 
   save_ping(api, pingResult);
 
@@ -131,6 +130,4 @@ export const picko_worker = async (api: DomainModelTypes) => {
     // api is down
     down_worker(api, pingResult);
   }
-
-  logs(null, "picko:init:worker", `end ${api._id}`);
 };
