@@ -39,10 +39,10 @@ const save_ping = async (api: DomainModelTypes, result: PingResultType) => {
 
 const up_worker = async (api: DomainModelTypes, pingResult: PingResultType) => {
   const { adress, name, last_ping, score, _id } = api;
+  let updateScore = score;
 
   if (!last_ping) {
     // last ping indicate api is down and now is up
-
     if (api.discord) {
       // send message to discord configured part
       // try {
@@ -64,11 +64,19 @@ const up_worker = async (api: DomainModelTypes, pingResult: PingResultType) => {
     }
   }
 
+  if (score === undefined) {
+    updateScore = 0;
+  } else if ((score as number) >= 100) {
+    updateScore = 100;
+  } else {
+    updateScore = (score as number) + 1;
+  }
+
   // now update last ping and score in database
   try {
     await pickoAxios.put(`/domains/automated/${_id}`, {
       state: true,
-      score: score === undefined ? 0 : parseInt(score.toFixed()) + 1,
+      score: updateScore,
     });
   } catch (error: any) {
     logs("error", "picko:work:up:update", error);
@@ -80,6 +88,7 @@ const down_worker = async (
   pingResult: PingResultType
 ) => {
   const { adress, name, last_ping, score, _id } = api;
+  let updateScore = score;
 
   if (last_ping) {
     // last ping indicate api is down and now is up
@@ -106,11 +115,24 @@ const down_worker = async (
     }
   }
 
+  if (score === undefined) {
+    updateScore = 0;
+  } else if ((score as number) <= -100) {
+    updateScore = -100;
+  } else {
+    updateScore = (score as number) - 1;
+  }
+
   // now update last ping and score in database
   try {
     await pickoAxios.put(`/domains/automated/${_id}`, {
       state: false,
-      score: score === undefined ? 0 : parseInt(score.toFixed()) - 1,
+      score:
+        score === undefined
+          ? 0
+          : (score as number) > -100
+          ? parseInt(score.toFixed()) - 1
+          : -100,
     });
   } catch (error: any) {
     logs("error", "picko:work:up:update", error);
