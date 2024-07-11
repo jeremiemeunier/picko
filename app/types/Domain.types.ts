@@ -8,6 +8,7 @@ export interface DomainModelTypes {
   mail: String[];
   discord: {
     guild: String;
+    channel: string;
     role: String;
   };
   users: String[];
