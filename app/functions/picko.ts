@@ -10,9 +10,9 @@ export const __picko__init__ = async (client: Client) => {
     const allDomains = await pickoAxios.get("/domains/automated");
 
     allDomains.data.map(async (domain: DomainModelTypes) => {
-      picko_worker(domain);
+      picko_worker(domain, client);
     });
   } catch (error: any) {
-    logs("error", "picko:init:get:domains", error.message || error);
+    logs("error", "init:get:domains", error.message || error);
   }
 };
