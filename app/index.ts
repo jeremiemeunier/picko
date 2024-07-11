@@ -49,18 +49,18 @@ const guild_boot = (guild: Guild) => {
   try {
     logs(
       "start",
-      "booter:guild_starter",
+      "boot:guild_starter",
       `Start all functions for ${guild.name}`,
       guild.id
     );
     register_in_guild(guild.id);
   } catch (error: any) {
-    logs("error", "booter:guild_starter", error, guild.id);
+    logs("error", "boot:guild_starter", error, guild.id);
   }
 };
 
 export const boot: () => void = async () => {
-  logs("start", "booter", `picko has started successfully`);
+  logs("start", "boot", `picko has started successfully`);
   // update status
   status();
 
@@ -68,7 +68,7 @@ export const boot: () => void = async () => {
     const allGuilds = client.guilds.cache;
     allGuilds.map((guild) => guild_boot(guild));
   } catch (error: any) {
-    logs("error", "booter", error);
+    logs("error", "boot", error);
   }
 
   client.on(Events.GuildCreate, (guild: Guild) => {
