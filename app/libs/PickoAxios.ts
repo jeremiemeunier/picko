@@ -12,7 +12,6 @@ const pickoAxios = axios.create({
 pickoAxios.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log(error.response);
     return Promise.reject(error.response.data);
   }
 );
