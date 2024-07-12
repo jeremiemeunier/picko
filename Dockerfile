@@ -14,6 +14,4 @@ COPY --from=builder /app/dist /app
 COPY package*.json ./
 RUN npm i
 
-EXPOSE 3000
-
 CMD [ "node", "index.js" ]

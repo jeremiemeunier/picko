@@ -1,6 +1,6 @@
-# staty
+# picko
 
-Staty is a discord bot that allows you to monitor the status of your APIs regularly and automatically.
+picko is a discord bot that allows you to monitor the status of your APIs regularly and automatically.
 
 ## Deployment
 
@@ -16,7 +16,7 @@ docker composer up -d --build
 
 ## Configuration files
 
-For configuration of Staty you must have this file : [.env](https://github.com/DigitalTeaCompany/staty/blob/main/.env.example).
+For configuration of picko you must have this file : [.env](https://github.com/DigitalTeaCompany/picko/blob/main/.env.example).
 
 ### Configuration
 
