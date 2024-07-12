@@ -1,6 +1,6 @@
 {
   "name": "picko-bot",
-  "version": "2.0.0",
+  "version": "3.0.1",
   "description": "A discord bot that allows you to monitor the status of your APIs regularly and automate.",
   "main": "app/index.ts",
   "license": "GPL-3.0",
