@@ -90,7 +90,7 @@ const up_worker = async (
     }
 
     try {
-      await pickoAxios.post(`/domains/report/${_id}`, {
+      await pickoAxios.post(`/domain/report/${_id}`, {
         state: true,
         delay: pingResult.delay,
       });
@@ -109,7 +109,7 @@ const up_worker = async (
 
   // now update last ping and score in database
   try {
-    await pickoAxios.put(`/domains/automated/${_id}`, {
+    await pickoAxios.put(`/domain/automated/${_id}`, {
       state: true,
       score: updateScore,
     });
@@ -170,7 +170,7 @@ const down_worker = async (
     }
 
     try {
-      await pickoAxios.post(`/domains/report/${_id}`, {
+      await pickoAxios.post(`/domain/report/${_id}`, {
         state: false,
         err: pingResult.failure,
         delay: pingResult.delay,
@@ -190,7 +190,7 @@ const down_worker = async (
 
   // now update last ping and score in database
   try {
-    await pickoAxios.put(`/domains/automated/${_id}`, {
+    await pickoAxios.put(`/domain/automated/${_id}`, {
       state: false,
       score:
         score === undefined
