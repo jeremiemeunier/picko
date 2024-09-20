@@ -7,7 +7,7 @@ import { DomainModelTypes } from "../types/Domain.types";
 export const __picko__init__ = async (client: Client) => {
   // getting all domains to ping
   try {
-    const allDomains = await pickoAxios.get("/domains/automated");
+    const allDomains = await pickoAxios.get("/domain/automated");
 
     allDomains.data.map(async (domain: DomainModelTypes) => {
       picko_worker(domain, client);
