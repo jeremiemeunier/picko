@@ -14,4 +14,4 @@ COPY --from=builder /app/dist /app
 COPY package*.json ./
 RUN npm i
 
-CMD [ "node", "index.js" ]
+CMD [ "npm", "run", "prod" ]
