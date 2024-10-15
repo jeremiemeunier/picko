@@ -21,7 +21,7 @@
   "dependencies": {
     "@babel/preset-typescript": "^7.24.6",
     "@discordjs/rest": "^2.3.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "cors": "^2.8.5",
     "discord.js": "^14.15.2",
     "express": "^4.21.0",
